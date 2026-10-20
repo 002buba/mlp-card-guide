@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小马宝莉美版卡 · 图鉴查询</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(145deg, #f9eef7 0%, #f1e7f5 100%);
+            min-height: 100vh; display: flex; justify-content: center; padding: 2rem 1rem;
+        }
+        .app {
+            max-width: 880px; width: 100%; background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-radius: 2.5rem; box-shadow: 0 20px 35px -8px rgba(155, 80, 140, 0.2), 0 8px 12px -6px rgba(0, 0, 0, 0.05);
+            padding: 2rem 1.5rem 1.5rem; border: 2px solid rgba(255, 220, 255, 0.7);
+        }
+        h1 {
+            font-size: 2rem; font-weight: 700; color: #6b2d5c;
+            letter-spacing: -0.02em; display: flex; align-items: center;
+            gap: 0.5rem; margin-bottom: 1.75rem; padding-left: 0.25rem;
+        }
+        h1 span {
+            background: #f3d0e4; border-radius: 100px; font-size: 1rem;
+            padding: 0.25rem 0.9rem; font-weight: 500; color: #4e1f42;
+            letter-spacing: 0; border: 1px solid #deb3d0;
+        }
+        .search-section { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
+        .search-wrapper { position: relative; display: flex; align-items: center; }
+        .search-icon { position: absolute; left: 1.2rem; font-size: 1.2rem; opacity: 0.5; pointer-events: none; color: #7e4a6f; }
+        #searchInput {
+            width: 100%; padding: 1rem 1rem 1rem 3.2rem; font-size: 1.1rem;
+            border: 2px solid #f0cee4; border-radius: 60px; background: white;
+            outline: none; transition: all 0.2s ease; color: #2d1b29; font-weight: 500;
+            box-shadow: 0 2px 8px rgba(179, 115, 160, 0.05);
+        }
+        #searchInput:focus { border-color: #c37bb0; box-shadow: 0 4px 14px rgba(175, 97, 151, 0.15); }
+        #searchInput::placeholder { color: #b9a0b2; font-weight: 400; font-size: 1rem; }
+        .filter-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem; padding: 0 0.25rem; }
+        .owned-toggle {
+            display: flex; align-items: center; gap: 0.5rem; background: #f7e6f1;
+            padding: 0.45rem 1rem 0.45rem 0.8rem; border-radius: 60px;
+            border: 1px solid #e2c3d6; cursor: pointer; user-select: none;
+            transition: all 0.15s ease; font-weight: 500; color: #4e2a43; font-size: 0.95rem;
+        }
+        .owned-toggle:hover { background: #f0d6e8; border-color: #c99ac2; }
+        .owned-toggle input[type="checkbox"] { width: 18px; height: 18px; accent-color: #b3529a; margin: 0; cursor: pointer; }
+        .stats {
+            margin-left: auto; font-size: 0.9rem; background: #e6d0e2;
+            padding: 0.35rem 1rem; border-radius: 60px; color: #4f2b44;
+            font-weight: 500; white-space: nowrap; border: 1px solid #d6b3cb;
+        }
+        .card-list {
+            list-style: none; display: flex; flex-direction: column; gap: 1rem;
+            max-height: 600px; overflow-y: auto; padding-right: 0.25rem; margin-top: 0.25rem;
+        }
+        .card-list::-webkit-scrollbar { width: 6px; }
+        .card-list::-webkit-scrollbar-track { background: #f3e2ed; border-radius: 10px; }
+        .card-list::-webkit-scrollbar-thumb { background: #cc9cbd; border-radius: 10px; }
+        .card-item {
+            display: flex; flex-direction: column; gap: 0.6rem; background: white;
+            padding: 1rem 1.2rem; border-radius: 24px;
+            box-shadow: 0 2px 8px rgba(143, 77, 125, 0.06); border: 1px solid #f5dbeb;
+            transition: all 0.15s ease;
+        }
+        .card-item:hover { background: #fefafd; border-color: #eec7e1; box-shadow: 0 6px 14px rgba(172, 102, 151, 0.08); }
+        .card-item.owned { background: #fbf2f9; border-left: 6px solid #c37bb0; }
+        .card-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+        .card-name { font-size: 1.1rem; font-weight: 600; color: #2f1d2b; word-break: break-word; flex: 1; }
+        .owned-mark {
+            display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.85rem;
+            color: #7a5470; background: #f2e4ee; padding: 0.3rem 0.9rem;
+            border-radius: 60px; cursor: pointer; user-select: none;
+            transition: background 0.15s; white-space: nowrap; font-weight: 500;
+            border: 1px solid transparent; flex-shrink: 0;
+        }
+        .owned-mark:hover { background: #e6d0e0; }
+        .owned-mark input[type="checkbox"] { width: 16px; height: 16px; accent-color: #b3529a; margin: 0; cursor: pointer; }
+        .image-area { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+        .thumb {
+            width: 70px; height: 70px; border-radius: 14px; overflow: hidden;
+            border: 2px solid #efd5e6; background: #f9eef7; cursor: pointer;
+            position: relative; transition: border-color 0.15s, transform 0.15s; flex-shrink: 0;
+        }
+        .thumb:hover { border-color: #b3529a; transform: scale(1.03); }
+        .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .thumb .thumb-delete {
+            position: absolute; top: 2px; right: 2px; width: 20px; height: 20px;
+            border-radius: 50%; background: rgba(60, 20, 50, 0.7); color: white;
+            border: none; font-size: 11px; line-height: 1; display: flex;
+            align-items: center; justify-content: center; cursor: pointer;
+            opacity: 0; transition: opacity 0.15s; padding: 0;
+        }
+        .thumb:hover .thumb-delete { opacity: 1; }
+        .thumb-delete:hover { background: #b3529a; }
+        .builtin-badge {
+            position: absolute; bottom: 2px; left: 2px;
+            background: rgba(107, 45, 92, 0.85); color: white;
+            font-size: 8px; padding: 1px 5px; border-radius: 20px;
+            pointer-events: none; font-weight: 500; letter-spacing: 0.2px;
+        }
+        .link-badge {
+            position: absolute; bottom: 2px; left: 2px;
+            background: rgba(52, 95, 135, 0.85); color: white;
+            font-size: 8px; padding: 1px 5px; border-radius: 20px;
+            pointer-events: none; font-weight: 500; letter-spacing: 0.2px;
+        }
+        .upload-thumb {
+            width: 70px; height: 70px; border-radius: 14px; border: 2px dashed #d6b3cb;
+            background: #f9eef7; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; cursor: pointer;
+            transition: all 0.15s; flex-shrink: 0; color: #a87899;
+            font-size: 0.65rem; gap: 2px; user-select: none;
+        }
+        .upload-thumb:hover { border-color: #b3529a; background: #f3e2ed; color: #8a4c76; }
+        .upload-thumb .plus { font-size: 1.5rem; line-height: 1; font-weight: 300; }
+        .upload-thumb.uploading {
+            border-color: #b3529a; background: #f3e2ed;
+            pointer-events: none; opacity: 0.7;
+        }
+        .upload-thumb.uploading .plus { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .link-thumb {
+            width: 70px; height: 70px; border-radius: 14px; border: 2px dashed #b8d0e8;
+            background: #eef5fc; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; cursor: pointer;
+            transition: all 0.15s; flex-shrink: 0; color: #587fa3;
+            font-size: 0.65rem; gap: 2px; user-select: none;
+        }
+        .link-thumb:hover { border-color: #4a7aa8; background: #e0ecf9; color: #2f5d84; }
+        .link-thumb .link-icon { font-size: 1.4rem; line-height: 1; font-weight: 300; }
+        .empty-message {
+            text-align: center; padding: 2.5rem 1rem; background: #fbf2f9;
+            border-radius: 30px; color: #8e6d85; font-size: 1.1rem;
+            border: 2px dashed #e2c3d6; font-weight: 500;
+        }
+        .footer-note { margin-top: 1.2rem; text-align: right; font-size: 0.75rem; color: #b092a7; letter-spacing: 0.3px; }
+        .loading-overlay {
+            position: fixed; inset: 0; background: rgba(255, 245, 252, 0.8);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; color: #6b2d5c; font-weight: 600;
+            z-index: 999; backdrop-filter: blur(4px);
+        }
+        .viewer-overlay {
+            position: fixed; inset: 0; background: rgba(30, 10, 25, 0.8);
+            display: none; align-items: center; justify-content: center;
+            z-index: 1000; backdrop-filter: blur(6px); padding: 2rem;
+        }
+        .viewer-overlay.active { display: flex; }
+        .viewer-content { position: relative; max-width: 90vw; max-height: 90vh; display: flex; align-items: center; gap: 1rem; }
+        .viewer-content img {
+            max-width: 85vw; max-height: 85vh; border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); object-fit: contain; background: #fff;
+        }
+        .viewer-close {
+            position: absolute; top: -40px; right: -10px; width: 40px; height: 40px;
+            border-radius: 50%; background: rgba(255, 255, 255, 0.9); border: none;
+            font-size: 1.4rem; cursor: pointer; color: #4e1f42; display: flex;
+            align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: background 0.15s;
+        }
+        .viewer-close:hover { background: white; }
+        .viewer-nav {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.85); border: none; font-size: 1.4rem;
+            cursor: pointer; color: #4e1f42; display: flex; align-items: center;
+            justify-content: center; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            transition: background 0.15s; z-index: 2;
+        }
+        .viewer-nav:hover { background: white; }
+        .viewer-nav.prev { left: -60px; }
+        .viewer-nav.next { right: -60px; }
+        .viewer-counter {
+            position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%);
+            color: white; font-size: 0.9rem; background: rgba(0, 0, 0, 0.5);
+            padding: 0.25rem 1rem; border-radius: 60px; white-space: nowrap;
+        }
+        .viewer-cardname {
+            position: absolute; top: -36px; left: 0; color: white; font-size: 0.95rem;
+            font-weight: 500; background: rgba(0, 0, 0, 0.4);
+            padding: 0.2rem 1rem; border-radius: 60px;
+        }
+        .link-dialog-overlay {
+            position: fixed; inset: 0; background: rgba(40, 20, 35, 0.6);
+            display: none; align-items: center; justify-content: center;
+            z-index: 1100; backdrop-filter: blur(4px); padding: 1.5rem;
+        }
+        .link-dialog-overlay.active { display: flex; }
+        .link-dialog {
+            background: white; border-radius: 24px; padding: 1.5rem 1.5rem 1.2rem;
+            width: 100%; max-width: 460px;
+            box-shadow: 0 20px 50px rgba(80, 30, 65, 0.3);
+            border: 2px solid #f0cee4;
+        }
+        .link-dialog h3 { font-size: 1.1rem; color: #4e1f42; margin-bottom: 0.3rem; font-weight: 600; }
+        .link-dialog .dialog-sub { font-size: 0.8rem; color: #a57a96; margin-bottom: 0.9rem; }
+        .link-dialog input[type="url"] {
+            width: 100%; padding: 0.75rem 1rem; font-size: 0.95rem;
+            border: 2px solid #e2c3d6; border-radius: 12px;
+            outline: none; transition: border-color 0.15s;
+            color: #2d1b29; background: #fdf8fc;
+        }
+        .link-dialog input[type="url"]:focus { border-color: #c37bb0; background: white; }
+        .link-dialog .dialog-actions { display: flex; justify-content: flex-end; gap: 0.6rem; margin-top: 1rem; }
+        .link-dialog .dialog-actions button {
+            padding: 0.5rem 1.2rem; border-radius: 60px; font-size: 0.9rem;
+            font-weight: 600; cursor: pointer; border: none; transition: all 0.15s;
+        }
+        .link-dialog .btn-cancel { background: #f0e4ec; color: #7a5470; }
+        .link-dialog .btn-cancel:hover { background: #e6d0e0; }
+        .link-dialog .btn-confirm { background: #b3529a; color: white; }
+        .link-dialog .btn-confirm:hover { background: #9a4584; }
+        .link-dialog .btn-confirm:disabled { background: #d9b8cf; cursor: not-allowed; }
+        .link-dialog .dialog-error {
+            font-size: 0.8rem; color: #c0392b; margin-top: 0.5rem; display: none;
+        }
+        .link-dialog .dialog-error.active { display: block; }
+        @media (max-width: 520px) {
+            .app { padding: 1.5rem 1rem; }
+            h1 { font-size: 1.6rem; flex-wrap: wrap; }
+            .stats { margin-left: 0; }
+            .filter-controls { gap: 0.5rem; }
+            .thumb, .upload-thumb, .link-thumb { width: 58px; height: 58px; }
+            .viewer-nav.prev { left: 6px; }
+            .viewer-nav.next { right: 6px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <h1>🦄 小马宝莉美版卡 <span>图鉴</span></h1>
+        <div class="search-section">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="搜索卡片名称..." autocomplete="off">
+            </div>
+            <div class="filter-controls">
+                <label class="owned-toggle">
+                    <input type="checkbox" id="ownedFilter"> 📌 仅显示已拥有
+                </label>
+                <div class="stats" id="statsDisplay">已拥有 0 / 0</div>
+            </div>
+        </div>
+        <ul class="card-list" id="cardList"></ul>
+        <div class="footer-note">点击缩略图查看大图 · 点击「+ 上传」从本地添加图片 · 点击「+ 链接」通过 URL 添加图片 · 悬停缩略图可删除</div>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">正在加载图鉴...</div>
+
+    <div class="viewer-overlay" id="viewerOverlay">
+        <div class="viewer-content">
+            <span class="viewer-cardname" id="viewerCardName"></span>
+            <button class="viewer-nav prev" id="viewerPrev" title="上一张">‹</button>
+            <img id="viewerImage" src="" alt="查看大图">
+            <button class="viewer-nav next" id="viewerNext" title="下一张">›</button>
+            <button class="viewer-close" id="viewerClose" title="关闭">✕</button>
+            <span class="viewer-counter" id="viewerCounter"></span>
+        </div>
+    </div>
+
+    <input type="file" id="globalFileInput" style="display:none" accept="image/*">
+
+    <div class="link-dialog-overlay" id="linkDialogOverlay">
+        <div class="link-dialog">
+            <h3 id="linkDialogTitle">添加图片链接</h3>
+            <p class="dialog-sub">输入图片的 URL 地址（以 http:// 或 https:// 开头）</p>
+            <input type="url" id="linkInput" placeholder="https://example.com/image.jpg" autocomplete="off">
+            <p class="dialog-error" id="linkError">请输入有效的图片链接</p>
+            <div class="dialog-actions">
+                <button class="btn-cancel" id="linkCancelBtn">取消</button>
+                <button class="btn-confirm" id="linkConfirmBtn">添加</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== 内置图片数据 ====================
+        const BUILTIN_IMAGES = {
+            "Rainbow Dash (云宝)": ["https://ponyhead.com/img/cards/cn19.jpg"]
+        };
+
+        // ==================== 数据 ====================
+        const cardsData = [
+            { name: "Twilight Sparkle (紫悦)" }, { name: "Fluttershy (柔柔)" }, { name: "Pinkie Pie (碧琪)" },
+            { name: "Rainbow Dash (云宝)" }, { name: "Applejack (苹果嘉儿)" }, { name: "Rarity (珍奇)" },
+            { name: "Spike (斯派克)" }, { name: "Princess Celestia (宇宙公主)" }, { name: "Princess Luna (月亮公主)" },
+            { name: "Apple Bloom (小苹花)" }, { name: "Sweetie Belle (甜心宝宝)" }, { name: "Scootaloo (飞板璐)" },
+            { name: "Discord (无序)" }, { name: "Queen Chrysalis (虫茧女王)" }, { name: "King Sombra (黑晶王)" },
+            { name: "Starlight Glimmer (星光熠熠)" }, { name: "Sunset Shimmer (余晖烁烁)" }, { name: "Trixie (特丽克西)" },
+            { name: "Big McIntosh (大麦克)" }, { name: "Granny Smith (史密斯婆婆)" }, { name: "Cheerilee (车厘子老师)" },
+            { name: "Zecora (可拉)" }, { name: "Mayor Mare (镇长)" }, { name: "Diamond Tiara (蒂亚拉)" },
+            { name: "Silver Spoon (银勺)" }, { name: "Babs Seed (巴布西)" }, { name: "Snips (剪剪)" },
+            { name: "Snails (蜗蜗)" }, { name: "Lightning Dust (闪电飞尘)" }, { name: "Flim (弗利姆)" },
+            { name: "Flam (弗拉姆)" }, { name: "Braeburn (布雷本)" }, { name: "Cadance (韵律公主)" },
+            { name: "Shining Armor (闪耀盔甲)" }, { name: "Cozy Glow (和煦光流)" }, { name: "Sandbar (沙坝)" },
+            { name: "Gallus (加鲁斯)" }, { name: "Yona (约娜)" }, { name: "Smolder (斯莫德)" },
+            { name: "Ocellus (奥赛蕾丝)" }, { name: "Silverstream (银溪)" }, { name: "Flash Sentry (闪卫)" },
+            { name: "Maud Pie (石灰姐)" }, { name: "Sunburst (日光耀耀)" }, { name: "Moon Dancer (月舞)" },
+            { name: "Cheese Sandwich (芝士三明治)" }, { name: "Coco Pommel (可可·帕梅)" }, { name: "Coloratura (彩音)" },
+            { name: "Tree Hugger (树之怀)" }, { name: "Saffron Masala (藏红花)" }, { name: "Zephyr Breeze (和风细雨)" },
+            { name: "Bow Hothoof (弓蹄)" }, { name: "Windy Whistles (风啸)" }, { name: "Night Light (夜光)" },
+            { name: "Twilight Velvet (暮光丝绒)" }
+        ];
+
+        cardsData.forEach(card => { card.images = []; });
+
+        // ==================== localStorage 存储 ====================
+        const STORAGE_KEY_IMAGES = 'mlp_card_images_v1';
+        const STORAGE_KEY_OWNED = 'mlp_card_owned_v3';
+
+        function saveAllImagesToStorage() {
+            const map = {};
+            cardsData.forEach(card => {
+                if (card.images && card.images.length > 0) {
+                    map[card.name] = card.images;
+                }
+            });
+            try {
+                localStorage.setItem(STORAGE_KEY_IMAGES, JSON.stringify(map));
+            } catch (e) {
+                console.warn('保存图片到 localStorage 失败（可能容量已满）', e);
+                alert('存储空间不足，图片可能无法保存。请尝试删除一些图片或使用更小的图片。');
+            }
+        }
+
+        function loadAllImagesFromStorage() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY_IMAGES);
+                if (stored) {
+                    const map = JSON.parse(stored);
+                    cardsData.forEach(card => {
+                        if (map[card.name] && Array.isArray(map[card.name])) {
+                            card.images = map[card.name];
+                        }
+                    });
+                }
+            } catch (e) {
+                console.warn('读取图片存储失败', e);
+            }
+        }
+
+        function loadOwnedFromStorage() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY_OWNED);
+                if (stored) {
+                    const ownedMap = JSON.parse(stored);
+                    cardsData.forEach(card => { card.owned = !!ownedMap[card.name]; });
+                } else {
+                    cardsData.forEach(card => { card.owned = false; });
+                }
+            } catch (e) {
+                console.warn('读取拥有状态失败', e);
+                cardsData.forEach(card => { card.owned = false; });
+            }
+        }
+
+        function saveOwnedToStorage() {
+            const ownedMap = {};
+            cardsData.forEach(card => { ownedMap[card.name] = !!card.owned; });
+            try { localStorage.setItem(STORAGE_KEY_OWNED, JSON.stringify(ownedMap)); }
+            catch (e) { console.warn('保存拥有状态失败', e); }
+        }
+
+        // ==================== DOM ====================
+        const searchInput = document.getElementById('searchInput');
+        const ownedFilterCheckbox = document.getElementById('ownedFilter');
+        const cardListEl = document.getElementById('cardList');
+        const statsDisplay = document.getElementById('statsDisplay');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const globalFileInput = document.getElementById('globalFileInput');
+
+        const viewerOverlay = document.getElementById('viewerOverlay');
+        const viewerImage = document.getElementById('viewerImage');
+        const viewerCardName = document.getElementById('viewerCardName');
+        const viewerCounter = document.getElementById('viewerCounter');
+        const viewerPrev = document.getElementById('viewerPrev');
+        const viewerNext = document.getElementById('viewerNext');
+        const viewerClose = document.getElementById('viewerClose');
+
+        const linkDialogOverlay = document.getElementById('linkDialogOverlay');
+        const linkDialogTitle = document.getElementById('linkDialogTitle');
+        const linkInput = document.getElementById('linkInput');
+        const linkError = document.getElementById('linkError');
+        const linkCancelBtn = document.getElementById('linkCancelBtn');
+        const linkConfirmBtn = document.getElementById('linkConfirmBtn');
+
+        let viewerState = { images: [], currentIndex: 0, cardName: '', isBuiltin: [] };
+        let currentUploadCardName = null;
+        let isUploading = false;
+        let linkTargetCardName = null;
+
+        // ==================== 查看器 ====================
+        function openViewer(cardName, images, startIndex = 0, builtinFlags = []) {
+            if (!images || images.length === 0) return;
+            viewerState = {
+                images: [...images],
+                currentIndex: Math.min(startIndex, images.length - 1),
+                cardName: cardName,
+                isBuiltin: [...builtinFlags]
+            };
+            updateViewer();
+            viewerOverlay.classList.add('active');
+        }
+
+        function updateViewer() {
+            const { images, currentIndex, cardName, isBuiltin } = viewerState;
+            if (images.length === 0) { viewerOverlay.classList.remove('active'); return; }
+            viewerImage.src = images[currentIndex];
+            const tag = isBuiltin && isBuiltin[currentIndex] ? ' [内置]' : '';
+            viewerCardName.textContent = cardName + tag;
+            viewerCounter.textContent = `${currentIndex + 1} / ${images.length}`;
+            viewerPrev.style.display = images.length > 1 ? 'flex' : 'none';
+            viewerNext.style.display = images.length > 1 ? 'flex' : 'none';
+        }
+
+        function closeViewer() {
+            viewerOverlay.classList.remove('active');
+            viewerImage.src = '';
+        }
+
+        function viewerGoPrev() {
+            const { images, currentIndex } = viewerState;
+            if (images.length <= 1) return;
+            viewerState.currentIndex = (currentIndex - 1 + images.length) % images.length;
+            updateViewer();
+        }
+
+        function viewerGoNext() {
+            const { images, currentIndex } = viewerState;
+            if (images.length <= 1) return;
+            viewerState.currentIndex = (currentIndex + 1) % images.length;
+            updateViewer();
+        }
+
+        viewerPrev.addEventListener('click', (e) => { e.stopPropagation(); viewerGoPrev(); });
+        viewerNext.addEventListener('click', (e) => { e.stopPropagation(); viewerGoNext(); });
+        viewerClose.addEventListener('click', closeViewer);
+        viewerOverlay.addEventListener('click', (e) => { if (e.target === viewerOverlay) closeViewer(); });
+        document.addEventListener('keydown', (e) => {
+            if (!viewerOverlay.classList.contains('active')) return;
+            if (e.key === 'Escape') closeViewer();
+            if (e.key === 'ArrowLeft') viewerGoPrev();
+            if (e.key === 'ArrowRight') viewerGoNext();
+        });
+
+        // ==================== 链接弹窗 ====================
+        function openLinkDialog(cardName) {
+            linkTargetCardName = cardName;
+            linkDialogTitle.textContent = `为「${cardName}」添加图片链接`;
+            linkInput.value = '';
+            linkError.classList.remove('active');
+            linkConfirmBtn.textContent = '添加';
+            linkConfirmBtn.disabled = false;
+            linkDialogOverlay.classList.add('active');
+            setTimeout(() => linkInput.focus(), 100);
+        }
+
+        function closeLinkDialog() {
+            linkDialogOverlay.classList.remove('active');
+            linkInput.value = '';
+            linkError.classList.remove('active');
+            linkConfirmBtn.textContent = '添加';
+            linkConfirmBtn.disabled = false;
+        }
+
+        function confirmAddLink() {
+            const url = linkInput.value.trim();
+            if (!url) {
+                linkError.textContent = '链接不能为空';
+                linkError.classList.add('active');
+                return;
+            }
+            if (!/^https?:\/\//i.test(url)) {
+                linkError.textContent = '链接必须以 http:// 或 https:// 开头';
+                linkError.classList.add('active');
+                return;
+            }
+
+            linkConfirmBtn.textContent = '保存中...';
+            linkConfirmBtn.disabled = true;
+
+            const targetName = linkTargetCardName;
+            const card = cardsData.find(c => c.name === targetName);
+            if (!card) {
+                linkConfirmBtn.textContent = '添加';
+                linkConfirmBtn.disabled = false;
+                linkError.textContent = '卡片不存在，请刷新页面重试';
+                linkError.classList.add('active');
+                return;
+            }
+
+            // 添加到内存并保存
+            card.images.push(url);
+            saveAllImagesToStorage();
+
+            closeLinkDialog();
+            linkTargetCardName = null;
+            render();
+        }
+
+        linkCancelBtn.addEventListener('click', () => {
+            closeLinkDialog();
+            linkTargetCardName = null;
+        });
+        linkConfirmBtn.addEventListener('click', confirmAddLink);
+        linkInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); confirmAddLink(); }
+            if (e.key === 'Escape') {
+                closeLinkDialog();
+                linkTargetCardName = null;
+            }
+        });
+        linkDialogOverlay.addEventListener('click', (e) => {
+            if (e.target === linkDialogOverlay) {
+                closeLinkDialog();
+                linkTargetCardName = null;
+            }
+        });
+
+        // ==================== 渲染 ====================
+        function render() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            const showOnlyOwned = ownedFilterCheckbox.checked;
+
+            const filteredCards = cardsData.filter(card => {
+                const matchesSearch = card.name.toLowerCase().includes(searchTerm);
+                const matchesOwned = showOnlyOwned ? card.owned === true : true;
+                return matchesSearch && matchesOwned;
+            });
+
+            cardListEl.innerHTML = '';
+
+            if (filteredCards.length === 0) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.className = 'empty-message';
+                emptyDiv.textContent = '✨ 没有找到匹配的卡片...';
+                cardListEl.appendChild(emptyDiv);
+            } else {
+                filteredCards.forEach(card => {
+                    const li = document.createElement('li');
+                    li.className = `card-item ${card.owned ? 'owned' : ''}`;
+
+                    const header = document.createElement('div');
+                    header.className = 'card-header';
+
+                    const nameSpan = document.createElement('span');
+                    nameSpan.className = 'card-name';
+                    nameSpan.textContent = card.name;
+
+                    const ownedLabel = document.createElement('label');
+                    ownedLabel.className = 'owned-mark';
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = card.owned || false;
+                    checkbox.addEventListener('change', (e) => {
+                        card.owned = e.target.checked;
+                        saveOwnedToStorage();
+                        render();
+                    });
+                    const ownedText = document.createElement('span');
+                    ownedText.textContent = '已拥有';
+                    ownedLabel.appendChild(checkbox);
+                    ownedLabel.appendChild(ownedText);
+
+                    header.appendChild(nameSpan);
+                    header.appendChild(ownedLabel);
+
+                    const builtinImgs = BUILTIN_IMAGES[card.name] || [];
+                    const userImgs = card.images || [];
+                    const allImgs = [...builtinImgs, ...userImgs];
+                    const builtinFlags = [...builtinImgs.map(() => true), ...userImgs.map(() => false)];
+
+                    const imageArea = document.createElement('div');
+                    imageArea.className = 'image-area';
+
+                    allImgs.forEach((imgData, idx) => {
+                        const isBuiltin = builtinFlags[idx];
+                        const thumb = document.createElement('div');
+                        thumb.className = 'thumb';
+                        thumb.title = isBuiltin ? '点击查看大图（内置图片，不可删除）' : '点击查看大图';
+
+                        const img = document.createElement('img');
+                        img.src = imgData;
+                        img.alt = `${card.name} 图片 ${idx + 1}`;
+                        img.onerror = () => {
+                            thumb.style.background = '#f0e4ec';
+                            thumb.innerHTML = '<span style="font-size:0.6rem;color:#a57a96;text-align:center;padding:2px;">图片加载失败</span>';
+                        };
+                        thumb.appendChild(img);
+
+                        if (isBuiltin) {
+                            const badge = document.createElement('span');
+                            badge.className = 'builtin-badge';
+                            badge.textContent = '内置';
+                            thumb.appendChild(badge);
+                        } else {
+                            const isLink = /^https?:\/\//i.test(imgData);
+                            if (isLink) {
+                                const badge = document.createElement('span');
+                                badge.className = 'link-badge';
+                                badge.textContent = '链接';
+                                thumb.appendChild(badge);
+                            }
+
+                            const userIdx = idx - builtinImgs.length;
+                            const delBtn = document.createElement('button');
+                            delBtn.className = 'thumb-delete';
+                            delBtn.textContent = '✕';
+                            delBtn.title = '删除这张图片';
+                            delBtn.type = 'button';
+                            delBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                if (!confirm(`确定要删除「${card.name}」的第 ${userIdx + 1} 张图片吗？`)) return;
+                                card.images.splice(userIdx, 1);
+                                saveAllImagesToStorage();
+                                render();
+                            });
+                            thumb.appendChild(delBtn);
+                        }
+
+                        thumb.addEventListener('click', (e) => {
+                            if (e.target.classList.contains('thumb-delete')) return;
+                            openViewer(card.name, allImgs, idx, builtinFlags);
+                        });
+
+                        imageArea.appendChild(thumb);
+                    });
+
+                    const uploadThumb = document.createElement('div');
+                    uploadThumb.className = 'upload-thumb';
+                    uploadThumb.title = '从本地上传图片';
+                    uploadThumb.innerHTML = `<span class="plus">+</span><span>上传</span>`;
+
+                    if (isUploading && currentUploadCardName === card.name) {
+                        uploadThumb.classList.add('uploading');
+                        uploadThumb.innerHTML = `<span class="plus">↻</span><span>保存中</span>`;
+                    }
+
+                    uploadThumb.addEventListener('click', () => {
+                        if (isUploading) return;
+                        currentUploadCardName = card.name;
+                        globalFileInput.value = '';
+                        globalFileInput.click();
+                    });
+                    imageArea.appendChild(uploadThumb);
+
+                    const linkThumb = document.createElement('div');
+                    linkThumb.className = 'link-thumb';
+                    linkThumb.title = '通过图片链接添加';
+                    linkThumb.innerHTML = `<span class="link-icon">🔗</span><span>链接</span>`;
+                    linkThumb.addEventListener('click', () => openLinkDialog(card.name));
+                    imageArea.appendChild(linkThumb);
+
+                    li.appendChild(header);
+                    li.appendChild(imageArea);
+                    cardListEl.appendChild(li);
+                });
+            }
+
+            const totalCards = cardsData.length;
+            const ownedCards = cardsData.filter(c => c.owned).length;
+            statsDisplay.textContent = `已拥有 ${ownedCards} / ${totalCards}`;
+        }
+
+        // ==================== 文件上传（也改用 localStorage） ====================
+        globalFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file || !currentUploadCardName) {
+                globalFileInput.value = '';
+                return;
+            }
+
+            const cardName = currentUploadCardName;
+
+            if (!file.type.startsWith('image/')) {
+                alert('请选择图片文件');
+                currentUploadCardName = null;
+                globalFileInput.value = '';
+                return;
+            }
+
+            if (file.size > 2 * 1024 * 1024) { // 限制 2MB 以适应 localStorage
+                alert('图片不能超过 2MB，请压缩后再上传（localStorage 容量有限）');
+                currentUploadCardName = null;
+                globalFileInput.value = '';
+                return;
+            }
+
+            isUploading = true;
+            render();
+
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const imageData = ev.target.result;
+                const card = cardsData.find(c => c.name === cardName);
+                if (card) {
+                    card.images.push(imageData);
+                    saveAllImagesToStorage();
+                }
+                isUploading = false;
+                currentUploadCardName = null;
+                globalFileInput.value = '';
+                render();
+            };
+            reader.onerror = () => {
+                alert('读取图片失败');
+                isUploading = false;
+                currentUploadCardName = null;
+                globalFileInput.value = '';
+                render();
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // ==================== 初始化 ====================
+        function init() {
+            loadOwnedFromStorage();
+            loadAllImagesFromStorage();
+            loadingOverlay.style.display = 'none';
+            render();
+        }
+
+        init();
+
+        searchInput.addEventListener('input', render);
+        ownedFilterCheckbox.addEventListener('change', render);
+    </script>
+</body>
+</html>
