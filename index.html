@@ -181,12 +181,24 @@
         }
         .thumb:hover { border-color: #b3529a; transform: scale(1.03); }
         .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        
+        /* 图片左上角的星标按钮 */
+        .thumb-star {
+            position: absolute; top: 2px; left: 2px; width: 22px; height: 22px;
+            border-radius: 50%; background: rgba(255, 255, 255, 0.85); color: #ccc;
+            border: 1px solid rgba(0,0,0,0.1); font-size: 13px; line-height: 1; display: flex;
+            align-items: center; justify-content: center; cursor: pointer;
+            transition: all 0.15s; padding: 0; z-index: 2;
+        }
+        .thumb-star:hover { transform: scale(1.1); color: #f1c40f; background: white; }
+        .thumb-star.owned { color: #f1c40f; background: white; border-color: #f1c40f; text-shadow: 0 0 2px rgba(241,196,15,0.5); }
+
         .thumb .thumb-delete {
             position: absolute; top: 2px; right: 2px; width: 20px; height: 20px;
             border-radius: 50%; background: rgba(60, 20, 50, 0.7); color: white;
             border: none; font-size: 11px; line-height: 1; display: flex;
             align-items: center; justify-content: center; cursor: pointer;
-            opacity: 0; transition: opacity 0.15s; padding: 0;
+            opacity: 0; transition: opacity 0.15s; padding: 0; z-index: 2;
         }
         .thumb:hover .thumb-delete { opacity: 1; }
         .thumb-delete:hover { background: #b3529a; }
@@ -394,6 +406,7 @@
             .filter-controls { gap: 0.5rem; }
             #searchInput, #seriesFilter { width: 100%; max-width: 100%; }
             .thumb, .upload-thumb, .link-thumb, .batch-thumb { width: 58px; height: 58px; }
+            .thumb-star { width: 18px; height: 18px; font-size: 11px; }
             .viewer-nav.prev { left: 6px; }
             .viewer-nav.next { right: 6px; }
             .trash-list { grid-template-columns: repeat(2, 1fr); }
@@ -421,6 +434,16 @@
             </div>
             
             <div>
+                <div class="sidebar-section-title">专属识别码</div>
+                <button class="side-btn" id="genCodeBtn" style="background: #fff8e1; border-color: #ffe082; color: #f57f17;">
+                    🔑 生成图鉴识别码
+                </button>
+                <button class="side-btn" id="importCodeBtn" style="background: #e0f2f1; border-color: #80cbc4; color: #00695c;">
+                    🔑 输入识别码恢复
+                </button>
+            </div>
+
+            <div>
                 <div class="sidebar-section-title">数据管理</div>
                 <button class="side-btn" id="exportDataBtn" style="background: #e0f5ea; border-color: #a8c8b8; color: #1b5e3e;">
                     📋 提取所有图片链接
@@ -433,8 +456,8 @@
 
             <div style="margin-top: 1rem; font-size: 0.8rem; color: #a57a96; line-height: 1.5;">
                 <p>💡 提示：</p>
-                <p>1. 你的数据保存在当前浏览器中。</p>
-                <p>2. 点击「导入」可恢复之前的备份数据。</p>
+                <p>1. 识别码仅同步 ⭐ 拥有状态。</p>
+                <p>2. 图片链接请用 json 备份转移。</p>
             </div>
         </div>
     </div>
@@ -458,14 +481,14 @@
             
             <div class="filter-controls">
                 <label class="owned-toggle">
-                    <input type="checkbox" id="ownedFilter"> 📌 仅显示已拥有
+                    <input type="checkbox" id="ownedFilter"> 📌 已拥有
                 </label>
                 <div class="stats" id="statsDisplay">已拥有 0 / 0</div>
             </div>
         </div>
 
         <ul class="card-list" id="cardList"></ul>
-        <div class="footer-note">点击缩略图查看大图 · 点击「上传」添加本地图片 · 点击「链接」单条导入 · 点击「批量」多行导入</div>
+        <div class="footer-note">点击缩略图查看大图 · 点击左上角 ☆ 标记单张卡片拥有 · 悬停右上角 ✕ 删除</div>
     </div>
 
     <div class="loading-overlay" id="loadingOverlay">正在加载图鉴...</div>
@@ -511,7 +534,7 @@
     <div class="export-overlay" id="exportOverlay">
         <div class="export-dialog">
             <div class="export-header">
-                <h3>🔗 分类图片链接提取</h3>
+                <h3 id="exportTitle">🔗 分类图片链接提取</h3>
                 <button class="close-btn" id="closeExportBtn" style="border:none; background:none; font-size:1.5rem; cursor:pointer; color:#a57a96;">✕</button>
             </div>
             <textarea id="exportTextArea" class="export-textarea" readonly></textarea>
@@ -523,8 +546,27 @@
     </div>
 
     <script>
+        // ==================== 内置图片数据 ====================
         const BUILTIN_IMAGES = {
-            "premiere_Rainbow Dash (云宝)": ["https://ponyhead.com/img/cards/cn19.jpg"]
+            "premiere_Rainbow Dash (云宝)": [
+                "https://ponyhead.com/img/cards/cn19.jpg"
+            ],
+            "premiere_Twilight Sparkle (紫悦)": [
+                "https://ponyhead.com/img/cards/pr4.jpg",
+                "https://ponyhead.com/img/cards/prPF4.jpg",
+                "https://ponyhead.com/img/cards/pr64.jpg",
+                "https://ponyhead.com/img/cards/pr203.jpg",
+                "https://ponyhead.com/img/cards/pr124.jpg",
+                "https://ponyhead.com/img/cards/pr135.jpg",
+                "https://ponyhead.com/img/cards/pr137.jpg",
+                "https://ponyhead.com/img/cards/pr138.jpg",
+                "https://ponyhead.com/img/cards/pr142.jpg",
+                "https://ponyhead.com/img/cards/pr175.jpg",
+                "https://ponyhead.com/img/cards/pr177.jpg",
+                "https://ponyhead.com/img/cards/pr182.jpg",
+                "https://ponyhead.com/img/cards/pr188.jpg",
+                "https://ponyhead.com/img/cards/pr196.jpg"
+            ]
         };
 
         const DEFAULT_SERIES = [
@@ -558,10 +600,15 @@
             "Rainbow Dash (云宝)", "Applejack (苹果嘉儿)", "Rarity (珍奇)"
         ];
 
+        // 存储 Keys
         const STORAGE_KEY_IMAGES = 'mlp_card_images_v4'; 
         const STORAGE_KEY_OWNED = 'mlp_card_owned_v6';
+        const STORAGE_KEY_OWNED_IMAGES = 'mlp_card_owned_images_v1'; // 记录单张图是否拥有
         const STORAGE_KEY_CUSTOM_SERIES = 'mlp_custom_series_v1';
         const STORAGE_KEY_TRASH = 'mlp_card_trash_v1';
+
+        // 全局变量：记录已拥有的图片链接
+        let ownedImagesSet = new Set();
 
         function loadSeriesList() {
             let customSeries = [];
@@ -638,6 +685,19 @@
             } catch (e) { cardsData.forEach(card => { card.owned = false; }); }
         }
 
+        // 加载/保存图片级别的拥有状态
+        function loadOwnedImagesFromStorage() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY_OWNED_IMAGES);
+                if (stored) {
+                    ownedImagesSet = new Set(JSON.parse(stored));
+                }
+            } catch (e) { ownedImagesSet = new Set(); }
+        }
+        function saveOwnedImagesToStorage() {
+            try { localStorage.setItem(STORAGE_KEY_OWNED_IMAGES, JSON.stringify([...ownedImagesSet])); } catch(e) {}
+        }
+
         function saveTrashToStorage() {
             try { localStorage.setItem(STORAGE_KEY_TRASH, JSON.stringify(trashData)); } catch(e) {}
         }
@@ -665,11 +725,15 @@
         const addSeriesBtn = document.getElementById('addSeriesBtn');
         const openTrashBtn = document.getElementById('openTrashBtn');
         
+        const genCodeBtn = document.getElementById('genCodeBtn');
+        const importCodeBtn = document.getElementById('importCodeBtn');
+
         const exportDataBtn = document.getElementById('exportDataBtn');
         const importDataBtn = document.getElementById('importDataBtn');
         const importFileInput = document.getElementById('importFileInput');
 
         const exportOverlay = document.getElementById('exportOverlay');
+        const exportTitle = document.getElementById('exportTitle');
         const exportTextArea = document.getElementById('exportTextArea');
         const copyExportBtn = document.getElementById('copyExportBtn');
         const closeExportBtn = document.getElementById('closeExportBtn');
@@ -782,7 +846,7 @@
             linkConfirmBtn.textContent = '确认';
             linkConfirmBtn.disabled = false;
             
-            if (mode === 'newSeries' || mode === 'link') {
+            if (mode === 'newSeries' || mode === 'link' || mode === 'importCode') {
                 linkInput.style.display = 'block';
                 batchInput.style.display = 'none';
                 linkInput.placeholder = placeholder;
@@ -872,6 +936,25 @@
                 closeLinkDialog();
                 render();
                 closeSidebar();
+
+            } else if (currentMode === 'importCode') {
+                if (!val) { linkError.textContent = '识别码不能为空'; linkError.classList.add('active'); return; }
+                try {
+                    const decoded = atob(val); // Base64 解码
+                    const parsed = JSON.parse(decoded); // 解析 JSON
+                    
+                    if (!Array.isArray(parsed)) throw new Error('格式不正确');
+                    
+                    // 还原数据
+                    ownedImagesSet = new Set(parsed);
+                    saveOwnedImagesToStorage();
+                    closeLinkDialog();
+                    render();
+                    alert('✅ 识别码导入成功！你的 ⭐ 标记已恢复。');
+                } catch (err) {
+                    linkError.textContent = '识别码无效，请检查后重试。';
+                    linkError.classList.add('active');
+                }
             }
         }
 
@@ -889,25 +972,40 @@
             openGenericDialog('newSeries', '增加新系列', '输入系列名称（例如：My Little Pony 新系列）', '系列名称...');
         });
 
-        // --- 数据提取：按分类生成文本 ---
+        // --- 识别码功能 ---
+        genCodeBtn.addEventListener('click', () => {
+            if (ownedImagesSet.size === 0) {
+                alert('你还没有标记任何图片为“已拥有”哦！');
+                return;
+            }
+            const str = JSON.stringify([...ownedImagesSet]);
+            const code = btoa(str); // Base64 编码
+            exportTitle.textContent = '🔑 你的专属图鉴识别码';
+            exportTextArea.value = code;
+            exportOverlay.classList.add('active');
+            closeSidebar();
+        });
+
+        importCodeBtn.addEventListener('click', () => {
+            openGenericDialog('importCode', '输入图鉴识别码', '粘贴你之前生成的专属识别码以恢复标记', '在此粘贴识别码...');
+        });
+
+        // --- 导出图片链接 ---
         exportDataBtn.addEventListener('click', () => {
             try {
                 let outputText = "";
-                const allSeries = SERIES_LIST.filter(s => s.id !== 'all'); // 排除全部
+                const allSeries = SERIES_LIST.filter(s => s.id !== 'all');
 
                 allSeries.forEach(series => {
-                    // 找出该系列下有图片的角色
                     const seriesCards = cardsData.filter(c => c.series === series.id);
                     let seriesHasImages = false;
                     let seriesText = `【${series.name}】\n`;
 
                     seriesCards.forEach(card => {
                         let cardLinks = [];
-                        // 加内置图片
                         if (BUILTIN_IMAGES[card.id]) {
                             cardLinks.push(...BUILTIN_IMAGES[card.id]);
                         }
-                        // 加用户添加的链接（只保留网络链接）
                         if (card.images && card.images.length > 0) {
                             card.images.forEach(url => {
                                 if (url.startsWith('http://') || url.startsWith('https://')) {
@@ -916,16 +1014,16 @@
                             });
                         }
 
-                        // 去重当前角色的链接
                         cardLinks = [...new Set(cardLinks)];
 
                         if (cardLinks.length > 0) {
                             seriesHasImages = true;
                             seriesText += `  ▪️ ${card.name}\n`;
                             cardLinks.forEach(url => {
-                                seriesText += `     ${url}\n`;
+                                const isOwned = ownedImagesSet.has(url) ? ' [⭐ 已拥有]' : '';
+                                seriesText += `     ${url}${isOwned}\n`;
                             });
-                            seriesText += "\n"; // 每个角色结束空一行
+                            seriesText += "\n";
                         }
                     });
 
@@ -939,7 +1037,7 @@
                     return;
                 }
 
-                // 显示在弹窗文本框中
+                exportTitle.textContent = '🔗 分类图片链接提取';
                 exportTextArea.value = outputText.trim();
                 exportOverlay.classList.add('active');
                 closeSidebar();
@@ -949,36 +1047,24 @@
             }
         });
 
-        // 关闭导出弹窗
         function closeExportDialog() { exportOverlay.classList.remove('active'); }
         closeExportBtn.addEventListener('click', closeExportDialog);
         cancelExportBtn.addEventListener('click', closeExportDialog);
         exportOverlay.addEventListener('click', (e) => { if (e.target === exportOverlay) closeExportDialog(); });
 
-        // 一键复制
         copyExportBtn.addEventListener('click', () => {
             const text = exportTextArea.value;
             if (!text) return;
 
             if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text).then(() => {
-                    showCopySuccess();
-                }).catch(() => {
-                    fallbackCopy();
-                });
-            } else {
-                fallbackCopy();
-            }
+                navigator.clipboard.writeText(text).then(() => { showCopySuccess(); }).catch(() => { fallbackCopy(); });
+            } else { fallbackCopy(); }
 
             function fallbackCopy() {
                 exportTextArea.select();
                 exportTextArea.setSelectionRange(0, 99999);
-                try {
-                    document.execCommand('copy');
-                    showCopySuccess();
-                } catch (err) {
-                    alert('复制失败，请手动全选复制！');
-                }
+                try { document.execCommand('copy'); showCopySuccess(); } 
+                catch (err) { alert('复制失败，请手动全选复制！'); }
             }
 
             function showCopySuccess() {
@@ -1016,6 +1102,8 @@
 
                     if (data.owned) localStorage.setItem(STORAGE_KEY_OWNED, JSON.stringify(data.owned));
                     else localStorage.removeItem(STORAGE_KEY_OWNED);
+                    
+                    if (data.ownedImages) localStorage.setItem(STORAGE_KEY_OWNED_IMAGES, JSON.stringify(data.ownedImages));
 
                     if (data.customSeries) localStorage.setItem(STORAGE_KEY_CUSTOM_SERIES, JSON.stringify(data.customSeries));
                     else localStorage.removeItem(STORAGE_KEY_CUSTOM_SERIES);
@@ -1035,7 +1123,7 @@
             reader.readAsText(file);
         });
 
-        // --- 看图器 ---
+        // 查看器
         function openViewer(cardName, images, startIndex = 0, builtinFlags = []) {
             if (!images || images.length === 0) return;
             viewerState = { images: [...images], currentIndex: Math.min(startIndex, images.length - 1), cardName: cardName, isBuiltin: [...builtinFlags] };
@@ -1077,7 +1165,7 @@
             if (e.key === 'ArrowRight') viewerGoNext();
         });
 
-        // --- 上传文件 ---
+        // 上传图片
         globalFileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file || !currentUploadCardId) { globalFileInput.value = ''; return; }
@@ -1112,18 +1200,32 @@
         function render() {
             const searchTerm = searchInput.value.trim().toLowerCase();
             const selectedSeries = seriesFilter.value || 'all';
-            const showOnlyOwned = ownedFilterCheckbox.checked;
+            const showOnlyOwned = ownedFilterCheckbox.checked; // 勾选了“已拥有”
 
             const filteredCards = cardsData.filter(card => {
                 const matchesSearch = card.name.toLowerCase().includes(searchTerm);
                 const matchesSeries = (selectedSeries === 'all') || (card.series === selectedSeries);
                 
-                let isActuallyOwned = card.owned;
+                // 判断该角色是否有标记为已拥有的图片
+                let hasOwnedImage = false;
                 if (selectedSeries === 'all') {
-                    isActuallyOwned = cardsData.some(c => c.name === card.name && c.owned);
+                    for (let c of cardsData) {
+                        if (c.name === card.name) {
+                            const bImgs = BUILTIN_IMAGES[c.id] || [];
+                            const uImgs = c.images || [];
+                            if ([...bImgs, ...uImgs].some(img => ownedImagesSet.has(img))) {
+                                hasOwnedImage = true;
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    const bImgs = BUILTIN_IMAGES[card.id] || [];
+                    const uImgs = card.images || [];
+                    hasOwnedImage = [...bImgs, ...uImgs].some(img => ownedImagesSet.has(img));
                 }
                 
-                const matchesOwned = showOnlyOwned ? isActuallyOwned === true : true;
+                const matchesOwned = showOnlyOwned ? hasOwnedImage === true : true;
                 return matchesSearch && matchesSeries && matchesOwned;
             });
 
@@ -1222,7 +1324,7 @@
                     });
                     
                     const ownedText = document.createElement('span');
-                    ownedText.textContent = '已拥有';
+                    ownedText.textContent = '已拥有角色';
                     ownedLabel.appendChild(checkbox);
                     ownedLabel.appendChild(ownedText);
 
@@ -1253,11 +1355,27 @@
                         builtinFlags = [...builtinImgs.map(() => true), ...userImgs.map(() => false)];
                     }
 
+                    // 【核心修改】如果勾选了“已拥有”，则过滤 allImgs，只保留标星的
+                    let finalImgs = [];
+                    let finalBuiltinFlags = [];
+                    
+                    allImgs.forEach((imgData, idx) => {
+                        if (showOnlyOwned) {
+                            if (ownedImagesSet.has(imgData)) {
+                                finalImgs.push(imgData);
+                                finalBuiltinFlags.push(builtinFlags[idx]);
+                            }
+                        } else {
+                            finalImgs.push(imgData);
+                            finalBuiltinFlags.push(builtinFlags[idx]);
+                        }
+                    });
+
                     const imageArea = document.createElement('div');
                     imageArea.className = 'image-area';
 
-                    allImgs.forEach((imgData, idx) => {
-                        const isBuiltin = builtinFlags[idx];
+                    finalImgs.forEach((imgData, idx) => {
+                        const isBuiltin = finalBuiltinFlags[idx];
                         const thumb = document.createElement('div');
                         thumb.className = 'thumb';
                         
@@ -1269,6 +1387,23 @@
                             thumb.innerHTML = '<span style="font-size:0.6rem;color:#a57a96;text-align:center;padding:2px;">加载失败</span>';
                         };
                         thumb.appendChild(img);
+                        
+                        // ☆ 图片级别的拥有标记
+                        const starBtn = document.createElement('button');
+                        starBtn.className = 'thumb-star' + (ownedImagesSet.has(imgData) ? ' owned' : '');
+                        starBtn.innerHTML = ownedImagesSet.has(imgData) ? '⭐' : '☆';
+                        starBtn.title = '标记/取消标记此图片为已拥有';
+                        starBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            if (ownedImagesSet.has(imgData)) {
+                                ownedImagesSet.delete(imgData);
+                            } else {
+                                ownedImagesSet.add(imgData);
+                            }
+                            saveOwnedImagesToStorage();
+                            render();
+                        });
+                        thumb.appendChild(starBtn);
 
                         if (isBuiltin) {
                             const badge = document.createElement('span');
@@ -1319,7 +1454,8 @@
 
                         thumb.addEventListener('click', (e) => {
                             if (e.target.classList.contains('thumb-delete')) return;
-                            openViewer(card.name, allImgs, idx, builtinFlags);
+                            if (e.target.classList.contains('thumb-star')) return;
+                            openViewer(card.name, finalImgs, idx, finalBuiltinFlags);
                         });
 
                         imageArea.appendChild(thumb);
@@ -1375,7 +1511,7 @@
                 ownedCards = displayList.filter(c => c.owned).length;
             }
             
-            statsDisplay.textContent = `筛选出 ${totalCards} 张 · 已拥有 ${ownedCards} 张`;
+            statsDisplay.textContent = `筛选出 ${totalCards} 张 · 角色已拥有 ${ownedCards} 张`;
         }
 
         function init() {
@@ -1384,6 +1520,7 @@
             loadOwnedFromStorage();    
             loadAllImagesFromStorage(); 
             loadTrashFromStorage();
+            loadOwnedImagesFromStorage(); // 加载单张图片的拥有标记
             renderSeriesDropdown();
             
             loadingOverlay.style.display = 'none';
