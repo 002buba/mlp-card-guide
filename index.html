@@ -8,13 +8,19 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            background: linear-gradient(145deg, #f9eef7 0%, #f1e7f5 100%);
+            background-image: 
+                linear-gradient(rgba(249, 238, 247, 0.85), rgba(241, 231, 245, 0.85)),
+                url('https://miaobi-lite.bj.bcebos.com/miaobi/5mao/b%275bCP6ams5a6d6I6J5Zyj6K%2Be6IqC5aOB57q46auY5riFXzE3MzQ0NTkwMjcuNjI3MDc1NA%3D%3D%27/0.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             min-height: 100vh; display: flex; justify-content: center; padding: 2rem 1rem;
             overflow-x: hidden;
         }
+        
         .app {
-            max-width: 880px; width: 100%; background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            max-width: 880px; width: 100%; background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
             border-radius: 2.5rem; box-shadow: 0 20px 35px -8px rgba(155, 80, 140, 0.2), 0 8px 12px -6px rgba(0, 0, 0, 0.05);
             padding: 2rem 1.5rem 1.5rem; border: 2px solid rgba(255, 220, 255, 0.7);
             position: relative; z-index: 1;
@@ -36,6 +42,7 @@
             font-size: 2rem; font-weight: 700; color: #6b2d5c;
             letter-spacing: -0.02em; display: flex; align-items: center;
             gap: 0.5rem; margin: 0;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
         }
         h1 span {
             background: #f3d0e4; border-radius: 100px; font-size: 1rem;
@@ -89,6 +96,20 @@
         }
         .side-btn:hover { background: #eec0d9; transform: translateY(-1px); box-shadow: 0 4px 10px rgba(179, 115, 160, 0.2); }
 
+        /* 主页悬浮功能按钮 */
+        .float-menu {
+            position: fixed; right: 2rem; bottom: 2rem; z-index: 800;
+            display: flex; flex-direction: column; gap: 0.8rem;
+        }
+        .float-btn {
+            width: 50px; height: 50px; border-radius: 50%;
+            background: #b3529a; color: white; border: none;
+            box-shadow: 0 4px 15px rgba(179, 82, 154, 0.4);
+            font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .float-btn:hover { transform: scale(1.1); background: #9a4584; }
+
         .search-section { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
         .search-wrapper { position: relative; display: flex; align-items: center; }
         .search-icon { position: absolute; left: 1.2rem; font-size: 1.2rem; opacity: 0.5; pointer-events: none; color: #7e4a6f; }
@@ -97,16 +118,16 @@
         
         #searchInput {
             flex: 1; min-width: 200px; padding: 1rem 1rem 1rem 3.2rem; font-size: 1.1rem;
-            border: 2px solid #f0cee4; border-radius: 60px; background: white;
+            border: 2px solid #f0cee4; border-radius: 60px; background: rgba(255, 255, 255, 0.9);
             outline: none; transition: all 0.2s ease; color: #2d1b29; font-weight: 500;
             box-shadow: 0 2px 8px rgba(179, 115, 160, 0.05);
         }
-        #searchInput:focus { border-color: #c37bb0; box-shadow: 0 4px 14px rgba(175, 97, 151, 0.15); }
+        #searchInput:focus { border-color: #c37bb0; box-shadow: 0 4px 14px rgba(175, 97, 151, 0.15); background: white; }
         #searchInput::placeholder { color: #b9a0b2; font-weight: 400; font-size: 1rem; }
 
         #seriesFilter {
             padding: 1rem 2.5rem 1rem 1.2rem; font-size: 1rem;
-            border: 2px solid #f0cee4; border-radius: 60px; background: white;
+            border: 2px solid #f0cee4; border-radius: 60px; background: rgba(255, 255, 255, 0.9);
             outline: none; cursor: pointer; transition: all 0.2s ease;
             color: #6b2d5c; font-weight: 600; max-width: 320px;
             box-shadow: 0 2px 8px rgba(179, 115, 160, 0.05);
@@ -116,11 +137,11 @@
             background-position: right 1rem center;
             background-size: 1em;
         }
-        #seriesFilter:focus { border-color: #c37bb0; box-shadow: 0 4px 14px rgba(175, 97, 151, 0.15); }
+        #seriesFilter:focus { border-color: #c37bb0; box-shadow: 0 4px 14px rgba(175, 97, 151, 0.15); background: white; }
 
         .filter-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem; padding: 0 0.25rem; }
         .owned-toggle {
-            display: flex; align-items: center; gap: 0.5rem; background: #f7e6f1;
+            display: flex; align-items: center; gap: 0.5rem; background: rgba(247, 230, 241, 0.9);
             padding: 0.45rem 1rem 0.45rem 0.8rem; border-radius: 60px;
             border: 1px solid #e2c3d6; cursor: pointer; user-select: none;
             transition: all 0.15s ease; font-weight: 500; color: #4e2a43; font-size: 0.95rem;
@@ -128,7 +149,7 @@
         .owned-toggle:hover { background: #f0d6e8; border-color: #c99ac2; }
         .owned-toggle input[type="checkbox"] { width: 18px; height: 18px; accent-color: #b3529a; margin: 0; cursor: pointer; }
         .stats {
-            margin-left: auto; font-size: 0.9rem; background: #e6d0e2;
+            margin-left: auto; font-size: 0.9rem; background: rgba(230, 208, 226, 0.9);
             padding: 0.35rem 1rem; border-radius: 60px; color: #4f2b44;
             font-weight: 500; white-space: nowrap; border: 1px solid #d6b3cb;
         }
@@ -142,13 +163,13 @@
         .card-list::-webkit-scrollbar-thumb { background: #cc9cbd; border-radius: 10px; }
         
         .card-item {
-            display: flex; flex-direction: column; gap: 0.6rem; background: white;
+            display: flex; flex-direction: column; gap: 0.6rem; background: rgba(255, 255, 255, 0.95);
             padding: 1rem 1.2rem; border-radius: 24px;
             box-shadow: 0 2px 8px rgba(143, 77, 125, 0.06); border: 1px solid #f5dbeb;
             transition: all 0.15s ease;
         }
-        .card-item:hover { background: #fefafd; border-color: #eec7e1; box-shadow: 0 6px 14px rgba(172, 102, 151, 0.08); }
-        .card-item.owned { background: #fbf2f9; border-left: 6px solid #c37bb0; }
+        .card-item:hover { background: white; border-color: #eec7e1; box-shadow: 0 6px 14px rgba(172, 102, 151, 0.08); }
+        .card-item.owned { background: rgba(251, 242, 249, 0.95); border-left: 6px solid #c37bb0; }
         .card-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
         .card-name { font-size: 1.1rem; font-weight: 600; color: #2f1d2b; word-break: break-word; flex: 1; }
         
@@ -241,11 +262,11 @@
         .batch-thumb .batch-icon { font-size: 1.2rem; line-height: 1; font-weight: 300; }
 
         .empty-message {
-            text-align: center; padding: 2.5rem 1rem; background: #fbf2f9;
+            text-align: center; padding: 2.5rem 1rem; background: rgba(251, 242, 249, 0.9);
             border-radius: 30px; color: #8e6d85; font-size: 1.1rem;
             border: 2px dashed #e2c3d6; font-weight: 500;
         }
-        .footer-note { margin-top: 1.2rem; text-align: right; font-size: 0.75rem; color: #b092a7; letter-spacing: 0.3px; }
+        .footer-note { margin-top: 1.2rem; text-align: right; font-size: 0.75rem; color: #b092a7; letter-spacing: 0.3px; text-shadow: 0 1px 1px rgba(255,255,255,0.8); }
         .loading-overlay {
             position: fixed; inset: 0; background: rgba(255, 245, 252, 0.8);
             display: flex; align-items: center; justify-content: center;
@@ -399,6 +420,96 @@
         .btn-close-export { background: #f0e4ec; color: #7a5470; }
         .btn-close-export:hover { background: #e6d0e0; }
 
+        /* 分类功能弹窗 */
+        .categorize-overlay {
+            position: fixed; inset: 0; background: rgba(40, 20, 35, 0.6);
+            display: none; align-items: center; justify-content: center;
+            z-index: 1400; backdrop-filter: blur(4px); padding: 1.5rem;
+        }
+        .categorize-overlay.active { display: flex; }
+        .categorize-dialog {
+            background: white; border-radius: 24px; padding: 1.5rem;
+            width: 100%; max-width: 500px; max-height: 85vh;
+            display: flex; flex-direction: column; gap: 1rem;
+            box-shadow: 0 20px 50px rgba(80, 30, 65, 0.3);
+            border: 2px solid #f0cee4;
+        }
+        .categorize-dialog h3 { font-size: 1.2rem; color: #6b2d5c; margin-bottom: 0.5rem; }
+        .categorize-dialog label { font-size: 0.9rem; font-weight: 600; color: #4e1f42; margin-bottom: 0.2rem; display: block; }
+        
+        /* 预览图 */
+        .categorize-preview {
+            display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;
+        }
+        .preview-item {
+            position: relative; display: inline-block;
+        }
+        .preview-item img {
+            width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 1px solid #efd5e6; display: block;
+        }
+        .preview-item .preview-delete-btn {
+            position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; border-radius: 50%;
+            background: #b93a3a; color: white; border: 1px solid white; font-size: 10px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0;
+        }
+
+        .categorize-dialog textarea {
+            width: 100%; padding: 0.8rem; font-size: 0.95rem;
+            border: 2px solid #e2c3d6; border-radius: 12px;
+            outline: none; resize: vertical; min-height: 80px; font-family: inherit;
+        }
+        .categorize-dialog textarea:focus { border-color: #c37bb0; background: #fdf8fc; }
+        
+        /* 多选角色列表 */
+        .role-checkbox-list {
+            max-height: 200px; overflow-y: auto; border: 2px solid #e2c3d6; border-radius: 12px;
+            padding: 0.5rem; display: flex; flex-direction: column; gap: 0.3rem;
+        }
+        .role-checkbox-list label {
+            display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; font-weight: 500;
+            color: #4e1f42; cursor: pointer; padding: 0.3rem 0.5rem; border-radius: 8px;
+            position: relative;
+        }
+        .role-checkbox-list label:hover { background: #f7e6f1; }
+        .role-checkbox-list input[type="checkbox"] { accent-color: #b3529a; width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; }
+        
+        /* 已含链接移除按钮 */
+        .role-has-link {
+            font-size: 0.7rem; color: #1b5e3e; background: #e0f5ea; padding: 0.1rem 0.4rem; border-radius: 10px;
+        }
+        .role-remove-btn {
+            margin-left: auto; font-size: 0.75rem; color: #b93a3a; background: #fcebeb; border: 1px solid #f8d6d6;
+            padding: 0.2rem 0.6rem; border-radius: 10px; cursor: pointer; transition: all 0.15s;
+        }
+        .role-remove-btn:hover { background: #f8d6d6; }
+
+        .categorize-dialog select, .categorize-dialog input[type="text"] {
+            width: 100%; padding: 0.8rem; font-size: 0.95rem;
+            border: 2px solid #e2c3d6; border-radius: 12px;
+            outline: none; cursor: pointer; font-family: inherit;
+        }
+        .categorize-dialog select:focus, .categorize-dialog input[type="text"]:focus { border-color: #c37bb0; }
+        
+        .categorize-tabs {
+            display: flex; gap: 0.5rem; border-bottom: 1px solid #e2c3d6; padding-bottom: 0.5rem; margin-bottom: 0.5rem;
+        }
+        .categorize-tab {
+            padding: 0.5rem 1rem; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+            border-radius: 12px 12px 0 0; color: #a57a96;
+        }
+        .categorize-tab.active { background: #f3d0e4; color: #6b2d5c; }
+        
+        .categorize-actions { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; margin-top: 1rem; }
+        .categorize-actions .queue-info { font-size: 0.85rem; color: #b3529a; font-weight: bold; }
+        .categorize-actions-btns { display: flex; gap: 0.8rem; }
+        .categorize-actions button {
+            padding: 0.6rem 1.5rem; border-radius: 60px; font-size: 0.95rem;
+            font-weight: 600; cursor: pointer; border: none; transition: all 0.15s;
+        }
+        .categorize-actions .btn-cancel { background: #f0e4ec; color: #7a5470; }
+        .categorize-actions .btn-confirm { background: #b3529a; color: white; }
+        .categorize-actions .btn-confirm:hover { background: #9a4584; }
+
         @media (max-width: 520px) {
             .app { padding: 1.5rem 1rem; }
             h1 { font-size: 1.4rem; flex-wrap: wrap; }
@@ -411,6 +522,8 @@
             .viewer-nav.next { right: 6px; }
             .trash-list { grid-template-columns: repeat(2, 1fr); }
             .export-textarea { font-size: 0.8rem; }
+            .float-menu { right: 1rem; bottom: 1rem; }
+            .categorize-actions { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -460,6 +573,11 @@
                 <p>2. 图片链接请用 json 备份转移。</p>
             </div>
         </div>
+    </div>
+
+    <!-- 悬浮分类按钮 -->
+    <div class="float-menu">
+        <button class="float-btn" id="categorizeBtn" title="分类到角色">📂</button>
     </div>
 
     <div class="app">
@@ -545,28 +663,175 @@
         </div>
     </div>
 
+    <!-- 分类弹窗 -->
+    <div class="categorize-overlay" id="categorizeOverlay">
+        <div class="categorize-dialog">
+            <h3>📂 分类图片链接</h3>
+            
+            <div>
+                <label>1. 粘贴图片链接</label>
+                <textarea id="categorizeLinkInput" placeholder="在此粘贴单条或多条链接（每行一个）..." style="min-height: 80px;"></textarea>
+                <div class="categorize-preview" id="categorizePreview"></div>
+            </div>
+
+            <div>
+                <label>2. 选择操作</label>
+                <div class="categorize-tabs">
+                    <div class="categorize-tab active" id="tabExisting">添加到已有角色</div>
+                    <div class="categorize-tab" id="tabNew">新建角色分组</div>
+                </div>
+
+                <!-- 已有角色选择 (多选) -->
+                <div id="existingSelectGroup" style="margin-top: 0.5rem;">
+                    <div class="role-checkbox-list" id="categorizeRoleList">
+                        <!-- 动态填充 -->
+                    </div>
+                </div>
+
+                <!-- 新建角色输入 -->
+                <div id="newRoleInputGroup" style="display: none; margin-top: 0.5rem; flex-direction: column; gap: 0.8rem;">
+                    <select id="categorizeSeriesSelect">
+                        <!-- 动态填充系列 -->
+                    </select>
+                    <input type="text" id="categorizeNewRoleName" placeholder="输入新角色名称（如：日光耀耀）">
+                </div>
+            </div>
+
+            <div class="categorize-actions">
+                <div class="queue-info" id="categorizeQueueInfo"></div>
+                <div class="categorize-actions-btns">
+                    <button class="btn-cancel" id="categorizeCancelBtn">取消</button>
+                    <button class="btn-confirm" id="categorizeConfirmBtn">确认分类</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ==================== 内置图片数据 ====================
+        // 为了方便维护，已将提供的数据按系列ID_角色名称全量映射在这里
         const BUILTIN_IMAGES = {
-            "premiere_Rainbow Dash (云宝)": [
-                "https://ponyhead.com/img/cards/cn19.jpg"
-            ],
-            "premiere_Twilight Sparkle (紫悦)": [
-                "https://ponyhead.com/img/cards/pr4.jpg",
-                "https://ponyhead.com/img/cards/prPF4.jpg",
-                "https://ponyhead.com/img/cards/pr64.jpg",
-                "https://ponyhead.com/img/cards/pr203.jpg",
-                "https://ponyhead.com/img/cards/pr124.jpg",
-                "https://ponyhead.com/img/cards/pr135.jpg",
-                "https://ponyhead.com/img/cards/pr137.jpg",
-                "https://ponyhead.com/img/cards/pr138.jpg",
-                "https://ponyhead.com/img/cards/pr142.jpg",
-                "https://ponyhead.com/img/cards/pr175.jpg",
-                "https://ponyhead.com/img/cards/pr177.jpg",
-                "https://ponyhead.com/img/cards/pr182.jpg",
-                "https://ponyhead.com/img/cards/pr188.jpg",
-                "https://ponyhead.com/img/cards/pr196.jpg"
-            ]
+            // Premiere - 首发 基础系列
+            "premiere_Twilight Sparkle (紫悦)": ["https://ponyhead.com/img/cards/pr4.jpg", "https://ponyhead.com/img/cards/prPF4.jpg", "https://ponyhead.com/img/cards/pr64.jpg", "https://ponyhead.com/img/cards/pr203.jpg", "https://ponyhead.com/img/cards/pr124.jpg", "https://ponyhead.com/img/cards/pr135.jpg", "https://ponyhead.com/img/cards/pr137.jpg", "https://ponyhead.com/img/cards/pr138.jpg", "https://ponyhead.com/img/cards/pr142.jpg", "https://ponyhead.com/img/cards/pr175.jpg", "https://ponyhead.com/img/cards/pr177.jpg", "https://ponyhead.com/img/cards/pr182.jpg", "https://ponyhead.com/img/cards/pr188.jpg", "https://ponyhead.com/img/cards/pr196.jpg", "https://ponyhead.com/img/cards/pr133.jpg", "https://ponyhead.com/img/cards/pr180.jpg", "https://ponyhead.com/img/cards/pr110.jpg", "https://ponyhead.com/img/cards/pr111.jpg", "https://ponyhead.com/img/cards/pr149.jpg", "https://ponyhead.com/img/cards/pr162.jpg", "https://ponyhead.com/img/cards/pr119.jpg", "https://ponyhead.com/img/cards/pr125.jpg", "https://ponyhead.com/img/cards/pr156.jpg", "https://ponyhead.com/img/cards/pr157.jpg"],
+            "premiere_Fluttershy (柔柔)": ["https://ponyhead.com/img/cards/pr180.jpg", "https://ponyhead.com/img/cards/pr187.jpg", "https://ponyhead.com/img/cards/pr185.jpg", "https://ponyhead.com/img/cards/pr6.jpg", "https://ponyhead.com/img/cards/prPF6.jpg", "https://ponyhead.com/img/cards/pr83.jpg", "https://ponyhead.com/img/cards/pr84.jpg", "https://ponyhead.com/img/cards/pr211.jpg", "https://ponyhead.com/img/cards/pr130.jpg", "https://ponyhead.com/img/cards/pr146.jpg", "https://ponyhead.com/img/cards/pr161.jpg", "https://ponyhead.com/img/cards/pr183.jpg", "https://ponyhead.com/img/cards/pr194.jpg", "https://ponyhead.com/img/cards/pr105.jpg", "https://ponyhead.com/img/cards/pr129.jpg", "https://ponyhead.com/img/cards/pr157.jpg"],
+            "premiere_Pinkie Pie (碧琪)": ["https://ponyhead.com/img/cards/pr3.jpg", "https://ponyhead.com/img/cards/prPF3.jpg", "https://ponyhead.com/img/cards/pr45.jpg", "https://ponyhead.com/img/cards/pr46.jpg", "https://ponyhead.com/img/cards/pr104.jpg", "https://ponyhead.com/img/cards/pr110.jpg", "https://ponyhead.com/img/cards/pr114.jpg", "https://ponyhead.com/img/cards/pr131.jpg", "https://ponyhead.com/img/cards/pr143.jpg", "https://ponyhead.com/img/cards/pr144.jpg", "https://ponyhead.com/img/cards/pr169.jpg", "https://ponyhead.com/img/cards/pr172.jpg", "https://ponyhead.com/img/cards/pr184.jpg", "https://ponyhead.com/img/cards/pr192.jpg", "https://ponyhead.com/img/cards/pr180.jpg", "https://ponyhead.com/img/cards/pr113.jpg", "https://ponyhead.com/img/cards/pr181.jpg", "https://ponyhead.com/img/cards/pr194.jpg", "https://ponyhead.com/img/cards/pr105.jpg", "https://ponyhead.com/img/cards/pr122.jpg"],
+            "premiere_Rainbow Dash (云宝)": ["https://ponyhead.com/img/cards/cn19.jpg", "https://ponyhead.com/img/cards/pr1.jpg", "https://ponyhead.com/img/cards/prPF1.jpg", "https://ponyhead.com/img/cards/pr15.jpg", "https://ponyhead.com/img/cards/pr198.jpg", "https://ponyhead.com/img/cards/pr117.jpg", "https://ponyhead.com/img/cards/pr140.jpg", "https://ponyhead.com/img/cards/pr151.jpg", "https://ponyhead.com/img/cards/pr171.jpg", "https://ponyhead.com/img/cards/pr178.jpg", "https://ponyhead.com/img/cards/pr181.jpg", "https://ponyhead.com/img/cards/pr167.jpg", "https://ponyhead.com/img/cards/pr128.jpg", "https://ponyhead.com/img/cards/pr130.jpg", "https://ponyhead.com/img/cards/pr179.jpg", "https://ponyhead.com/img/cards/pr95.jpg", "https://ponyhead.com/img/cards/pr122.jpg", "https://ponyhead.com/img/cards/pr157.jpg"],
+            "premiere_Applejack (苹果嘉儿)": ["https://ponyhead.com/img/cards/pr2.jpg", "https://ponyhead.com/img/cards/prPF2.jpg", "https://ponyhead.com/img/cards/pr22.jpg", "https://ponyhead.com/img/cards/pr23.jpg", "https://ponyhead.com/img/cards/pr24.jpg", "https://ponyhead.com/img/cards/pr111.jpg", "https://ponyhead.com/img/cards/pr128.jpg", "https://ponyhead.com/img/cards/pr145.jpg", "https://ponyhead.com/img/cards/pr149.jpg", "https://ponyhead.com/img/cards/pr173.jpg", "https://ponyhead.com/img/cards/pr189.jpg", "https://ponyhead.com/img/cards/pr162.jpg", "https://ponyhead.com/img/cards/pr180.jpg", "https://ponyhead.com/img/cards/pr113.jpg", "https://ponyhead.com/img/cards/pr121.jpg", "https://ponyhead.com/img/cards/pr129.jpg", "https://ponyhead.com/img/cards/pr157.jpg"],
+            "premiere_Rarity (珍奇)": ["https://ponyhead.com/img/cards/pr5.jpg", "https://ponyhead.com/img/cards/pr77.jpg", "https://ponyhead.com/img/cards/pr206.jpg", "https://ponyhead.com/img/cards/pr107.jpg", "https://ponyhead.com/img/cards/pr118.jpg", "https://ponyhead.com/img/cards/pr132.jpg", "https://ponyhead.com/img/cards/pr141.jpg", "https://ponyhead.com/img/cards/pr147.jpg", "https://ponyhead.com/img/cards/pr163.jpg", "https://ponyhead.com/img/cards/pr170.jpg", "https://ponyhead.com/img/cards/pr174.jpg", "https://ponyhead.com/img/cards/pr180.jpg", "https://ponyhead.com/img/cards/pr186.jpg", "https://ponyhead.com/img/cards/pr193.jpg", "https://ponyhead.com/img/cards/pr142.jpg", "https://ponyhead.com/img/cards/pr198.jpg", "https://ponyhead.com/img/cards/pr168.jpg", "https://ponyhead.com/img/cards/pr96.jpg", "https://ponyhead.com/img/cards/pr97.jpg", "https://ponyhead.com/img/cards/pr105.jpg", "https://ponyhead.com/img/cards/pr156.jpg", "https://ponyhead.com/img/cards/pr157.jpg"],
+            "premiere_Spike (穗龙)": ["https://ponyhead.com/img/cards/pr18.jpg", "https://ponyhead.com/img/cards/pr109.jpg", "https://ponyhead.com/img/cards/pr124.jpg", "https://ponyhead.com/img/cards/pr188.jpg", "https://ponyhead.com/img/cards/pr97.jpg"],
+            "premiere_音韵公主 & 闪耀盔甲": ["https://ponyhead.com/img/cards/pr174.jpg"],
+            "premiere_皇家姐妹 (宇宙公主 & 月亮公主)": ["https://ponyhead.com/img/cards/pr115.jpg", "https://ponyhead.com/img/cards/pr208.jpg", "https://ponyhead.com/img/cards/pr99.jpg", "https://ponyhead.com/img/cards/pr210.jpg"],
+            "premiere_可爱军团 (小苹花 & 甜心宝宝 & 飞板璐)": ["https://ponyhead.com/img/cards/pr102.jpg", "https://ponyhead.com/img/cards/prPF6.jpg", "https://ponyhead.com/img/cards/pr98.jpg"],
+            "premiere_Discord (无序)": ["https://ponyhead.com/img/cards/pr106.jpg"],
+            
+            // Canterlot Nights - 坎特洛特之夜
+            "canterlot_Twilight Sparkle (紫悦)": ["https://ponyhead.com/img/cards/cn120.jpg", "https://ponyhead.com/img/cards/cn150.jpg", "https://ponyhead.com/img/cards/cn170.jpg", "https://ponyhead.com/img/cards/cn174.jpg", "https://ponyhead.com/img/cards/cn181.jpg", "https://ponyhead.com/img/cards/cnPF9.jpg", "https://ponyhead.com/img/cards/cn171.jpg", "https://ponyhead.com/img/cards/cn5.jpg", "https://ponyhead.com/img/cards/cn65.jpg", "https://ponyhead.com/img/cards/cn197.jpg", "https://ponyhead.com/img/cards/cn109.jpg", "https://ponyhead.com/img/cards/cn128.jpg", "https://ponyhead.com/img/cards/cn140.jpg", "https://ponyhead.com/img/cards/cn142.jpg", "https://ponyhead.com/img/cards/cn144.jpg", "https://ponyhead.com/img/cards/cn151.jpg", "https://ponyhead.com/img/cards/cn202.jpg", "https://ponyhead.com/img/cards/cn182.jpg", "https://ponyhead.com/img/cards/cn166.jpg", "https://ponyhead.com/img/cards/cn147.jpg", "https://ponyhead.com/img/cards/cn121.jpg"],
+            "canterlot_Fluttershy (柔柔)": ["https://ponyhead.com/img/cards/cnPF11.jpg", "https://ponyhead.com/img/cards/cn120.jpg", "https://ponyhead.com/img/cards/cn170.jpg", "https://ponyhead.com/img/cards/cn181.jpg", "https://ponyhead.com/img/cards/cn125.jpg", "https://ponyhead.com/img/cards/cn148.jpg", "https://ponyhead.com/img/cards/cn169.jpg", "https://ponyhead.com/img/cards/cn175.jpg", "https://ponyhead.com/img/cards/cn7.jpg", "https://ponyhead.com/img/cards/cn83.jpg", "https://ponyhead.com/img/cards/cn88.jpg", "https://ponyhead.com/img/cards/cn89.jpg", "https://ponyhead.com/img/cards/cn93.jpg", "https://ponyhead.com/img/cards/cn103.jpg", "https://ponyhead.com/img/cards/cn117.jpg", "https://ponyhead.com/img/cards/cn147.jpg", "https://ponyhead.com/img/cards/cn149.jpg", "https://ponyhead.com/img/cards/cn201.jpg", "https://ponyhead.com/img/cards/cn172.jpg", "https://ponyhead.com/img/cards/cn173.jpg", "https://ponyhead.com/img/cards/cn180.jpg", "https://ponyhead.com/img/cards/cn118.jpg", "https://ponyhead.com/img/cards/cn0.jpg"],
+            "canterlot_Pinkie Pie (碧琪)": ["https://ponyhead.com/img/cards/cn120.jpg", "https://ponyhead.com/img/cards/cn152.jpg", "https://ponyhead.com/img/cards/cn170.jpg", "https://ponyhead.com/img/cards/cn181.jpg", "https://ponyhead.com/img/cards/cnPF7.jpg", "https://ponyhead.com/img/cards/cn130.jpg", "https://ponyhead.com/img/cards/cn178.jpg", "https://ponyhead.com/img/cards/cn3.jpg", "https://ponyhead.com/img/cards/cn46.jpg", "https://ponyhead.com/img/cards/cn195.jpg", "https://ponyhead.com/img/cards/cn115.jpg", "https://ponyhead.com/img/cards/cn125.jpg", "https://ponyhead.com/img/cards/cn132.jpg", "https://ponyhead.com/img/cards/cn136.jpg", "https://ponyhead.com/img/cards/cn155.jpg", "https://ponyhead.com/img/cards/cn171.jpg", "https://ponyhead.com/img/cards/cn176.jpg", "https://ponyhead.com/img/cards/cn188.jpg", "https://ponyhead.com/img/cards/cn140.jpg", "https://ponyhead.com/img/cards/cn107.jpg", "https://ponyhead.com/img/cards/cn166.jpg", "https://ponyhead.com/img/cards/cn147.jpg", "https://ponyhead.com/img/cards/cn138.jpg"],
+            "canterlot_Rainbow Dash (云宝)": ["https://ponyhead.com/img/cards/cn1.jpg", "https://ponyhead.com/img/cards/cnPF11.jpg", "https://ponyhead.com/img/cards/cn18.jpg", "https://ponyhead.com/img/cards/cn19.jpg", "https://ponyhead.com/img/cards/cn111.jpg", "https://ponyhead.com/img/cards/cn120.jpg", "https://ponyhead.com/img/cards/cn123.jpg", "https://ponyhead.com/img/cards/cn129.jpg", "https://ponyhead.com/img/cards/cn170.jpg", "https://ponyhead.com/img/cards/cn186.jpg", "https://ponyhead.com/img/cards/cn181.jpg", "https://ponyhead.com/img/cards/cn174.jpg", "https://ponyhead.com/img/cards/cn106.jpg", "https://ponyhead.com/img/cards/cn171.jpg", "https://ponyhead.com/img/cards/cn140.jpg", "https://ponyhead.com/img/cards/cnPF13.jpg", "https://ponyhead.com/img/cards/cn107.jpg", "https://ponyhead.com/img/cards/cn184.jpg", "https://ponyhead.com/img/cards/cn131.jpg", "https://ponyhead.com/img/cards/cn147.jpg", "https://ponyhead.com/img/cards/cn119.jpg", "https://ponyhead.com/img/cards/cn121.jpg", "https://ponyhead.com/img/cards/cn157.jpg"],
+            "canterlot_Applejack (苹果嘉儿)": ["https://ponyhead.com/img/cards/cn120.jpg", "https://ponyhead.com/img/cards/cn170.jpg", "https://ponyhead.com/img/cards/cn181.jpg", "https://ponyhead.com/img/cards/cn2.jpg", "https://ponyhead.com/img/cards/cnPF7.jpg", "https://ponyhead.com/img/cards/cn25.jpg", "https://ponyhead.com/img/cards/cn26.jpg", "https://ponyhead.com/img/cards/cn106.jpg", "https://ponyhead.com/img/cards/cn113.jpg", "https://ponyhead.com/img/cards/cn126.jpg", "https://ponyhead.com/img/cards/cn153.jpg", "https://ponyhead.com/img/cards/cn154.jpg", "https://ponyhead.com/img/cards/cn168.jpg", "https://ponyhead.com/img/cards/cn171.jpg", "https://ponyhead.com/img/cards/cnPF3.jpg", "https://ponyhead.com/img/cards/cn148.jpg", "https://ponyhead.com/img/cards/cn147.jpg", "https://ponyhead.com/img/cards/cn119.jpg"],
+            "canterlot_Rarity (珍奇)": ["https://ponyhead.com/img/cards/cn120.jpg", "https://ponyhead.com/img/cards/cn126.jpg", "https://ponyhead.com/img/cards/cn171.jpg", "https://ponyhead.com/img/cards/cn140.jpg", "https://ponyhead.com/img/cards/cn6.jpg", "https://ponyhead.com/img/cards/cn8.jpg", "https://ponyhead.com/img/cards/cnPF13.jpg", "https://ponyhead.com/img/cards/cn77.jpg", "https://ponyhead.com/img/cards/cn78.jpg", "https://ponyhead.com/img/cards/cn199.jpg", "https://ponyhead.com/img/cards/cn107.jpg", "https://ponyhead.com/img/cards/cn112.jpg", "https://ponyhead.com/img/cards/cn127.jpg", "https://ponyhead.com/img/cards/cn137.jpg", "https://ponyhead.com/img/cards/cn146.jpg", "https://ponyhead.com/img/cards/cn148.jpg", "https://ponyhead.com/img/cards/cn185.jpg", "https://ponyhead.com/img/cards/cn175.jpg", "https://ponyhead.com/img/cards/cn184.jpg", "https://ponyhead.com/img/cards/cn166.jpg", "https://ponyhead.com/img/cards/cnPF5.jpg", "https://ponyhead.com/img/cards/cn147.jpg", "https://ponyhead.com/img/cards/cn118.jpg", "https://ponyhead.com/img/cards/cn135.jpg"],
+            "canterlot_Spike (穗龙)": ["https://ponyhead.com/img/cards/cn101.jpg", "https://ponyhead.com/img/cards/cn141.jpg", "https://ponyhead.com/img/cards/cn62.jpg", "https://ponyhead.com/img/cards/cn128.jpg", "https://ponyhead.com/img/cards/cn142.jpg", "https://ponyhead.com/img/cards/cn167.jpg", "https://ponyhead.com/img/cards/cn107.jpg", "https://ponyhead.com/img/cards/cn148.jpg", "https://ponyhead.com/img/cards/cn184.jpg", "https://ponyhead.com/img/cards/cn105.jpg"],
+            "canterlot_音韵公主 & 闪耀盔甲": ["https://ponyhead.com/img/cards/cn61.jpg", "https://ponyhead.com/img/cards/cn182.jpg", "https://ponyhead.com/img/cards/cn184.jpg", "https://ponyhead.com/img/cards/cn156.jpg"],
+            "canterlot_皇家姐妹 (宇宙公主 & 月亮公主)": ["https://ponyhead.com/img/cards/cn124.jpg", "https://ponyhead.com/img/cards/cnf2.jpg", "https://ponyhead.com/img/cards/cn4.jpg", "https://ponyhead.com/img/cards/cn189.jpg", "https://ponyhead.com/img/cards/cn59.jpg", "https://ponyhead.com/img/cards/cn196.jpg", "https://ponyhead.com/img/cards/cn108.jpg", "https://ponyhead.com/img/cards/cn116.jpg", "https://ponyhead.com/img/cards/cn179.jpg", "https://ponyhead.com/img/cards/cn184.jpg", "https://ponyhead.com/img/cards/cnf4.jpg", "https://ponyhead.com/img/cards/cn190.jpg", "https://ponyhead.com/img/cards/cn96.jpg", "https://ponyhead.com/img/cards/cn200.jpg", "https://ponyhead.com/img/cards/cn122.jpg"],
+            "canterlot_可爱军团 (小苹花 & 甜心宝宝 & 飞板璐)": ["https://ponyhead.com/img/cards/cn21.jpg", "https://ponyhead.com/img/cards/cn143.jpg", "https://ponyhead.com/img/cards/cn183.jpg", "https://ponyhead.com/img/cards/cn199.jpg", "https://ponyhead.com/img/cards/cnPF5.jpg", "https://ponyhead.com/img/cards/cn172.jpg"],
+
+            // Rock and Rave - 摇滚与狂欢
+            "rock_Twilight Sparkle (紫悦)": ["https://ponyhead.com/img/cards/rr7.jpg", "https://ponyhead.com/img/cards/rr5.jpg"],
+            "rock_Pinkie Pie (碧琪)": ["https://ponyhead.com/img/cards/rrF1.jpg", "https://ponyhead.com/img/cards/rrF2.jpg", "https://ponyhead.com/img/cards/rr10.jpg", "https://ponyhead.com/img/cards/rr6.jpg"],
+            "rock_Rarity (珍奇)": ["https://ponyhead.com/img/cards/rr8.jpg", "https://ponyhead.com/img/cards/rr9.jpg", "https://ponyhead.com/img/cards/rr6.jpg"],
+
+            // Celestial Solstice - 天界至日 星璇冬
+            "celestial_Twilight Sparkle (紫悦)": ["https://ponyhead.com/img/cards/cs6.jpg", "https://ponyhead.com/img/cards/csf1.jpg", "https://ponyhead.com/img/cards/csf1b.jpg", "https://ponyhead.com/img/cards/cs7.jpg"],
+            "celestial_Fluttershy (柔柔)": ["https://ponyhead.com/img/cards/csf1.jpg", "https://ponyhead.com/img/cards/csf1b.jpg"],
+            "celestial_Pinkie Pie (碧琪)": ["https://ponyhead.com/img/cards/csf1.jpg", "https://ponyhead.com/img/cards/csf1b.jpg"],
+            "celestial_Rainbow Dash (云宝)": ["https://ponyhead.com/img/cards/cs5.jpg", "https://ponyhead.com/img/cards/csf1.jpg", "https://ponyhead.com/img/cards/csf1b.jpg"],
+            "celestial_Applejack (苹果嘉儿)": ["https://ponyhead.com/img/cards/cs1.jpg", "https://ponyhead.com/img/cards/csf1.jpg", "https://ponyhead.com/img/cards/csf1b.jpg"],
+            "celestial_Rarity (珍奇)": ["https://ponyhead.com/img/cards/csf1.jpg", "https://ponyhead.com/img/cards/csf1b.jpg", "https://ponyhead.com/img/cards/cs3.jpg"],
+            "celestial_音韵公主 & 闪耀盔甲": ["https://ponyhead.com/img/cards/csF2b.jpg"],
+            "celestial_皇家姐妹 (宇宙公主 & 月亮公主)": ["https://ponyhead.com/img/cards/csF2.jpg", "https://ponyhead.com/img/cards/csF2b.jpg", "https://ponyhead.com/img/cards/cs4.jpg", "https://ponyhead.com/img/cards/cs8.jpg"],
+
+            // Crystal Games - 水晶游戏 水晶帝国
+            "crystal_Twilight Sparkle (紫悦)": ["https://ponyhead.com/img/cards/cg123.jpg", "https://ponyhead.com/img/cards/cg32.jpg", "https://ponyhead.com/img/cards/cg94.jpg", "https://ponyhead.com/img/cards/cg176.jpg", "https://ponyhead.com/img/cards/cg92.jpg", "https://ponyhead.com/img/cards/cg172.jpg", "https://ponyhead.com/img/cards/cg00.jpg", "https://ponyhead.com/img/cards/cg60.jpg", "https://ponyhead.com/img/cards/cg61.jpg", "https://ponyhead.com/img/cards/cg91.jpg", "https://ponyhead.com/img/cards/cg116.jpg", "https://ponyhead.com/img/cards/cg153.jpg", "https://ponyhead.com/img/cards/cg186.jpg", "https://ponyhead.com/img/cards/cg112.jpg", "https://ponyhead.com/img/cards/cg88.jpg", "https://ponyhead.com/img/cards/cg90.jpg", "https://ponyhead.com/img/cards/cg136.jpg", "https://ponyhead.com/img/cards/cg150.jpg", "https://ponyhead.com/img/cards/cg183.jpg", "https://ponyhead.com/img/cards/cg104.jpg", "https://ponyhead.com/img/cards/cg143.jpg", "https://ponyhead.com/img/cards/cg146.jpg", "https://ponyhead.com/img/cards/cg188.jpg"],
+            "crystal_Fluttershy (柔柔)": ["https://ponyhead.com/img/cards/cg96.jpg", "https://ponyhead.com/img/cards/cg110.jpg", "https://ponyhead.com/img/cards/cg113.jpg", "https://ponyhead.com/img/cards/cg178.jpg", "https://ponyhead.com/img/cards/cg94.jpg", "https://ponyhead.com/img/cards/cg172.jpg", "https://ponyhead.com/img/cards/cg91.jpg", "https://ponyhead.com/img/cards/cg112.jpg", "https://ponyhead.com/img/cards/cg82.jpg", "https://ponyhead.com/img/cards/cg83.jpg", "https://ponyhead.com/img/cards/cg200.jpg", "https://ponyhead.com/img/cards/cg102.jpg", "https://ponyhead.com/img/cards/cg117.jpg", "https://ponyhead.com/img/cards/cg173.jpg", "https://ponyhead.com/img/cards/cg180.jpg", "https://ponyhead.com/img/cards/cg183.jpg", "https://ponyhead.com/img/cards/cg147.jpg"],
+            "crystal_Pinkie Pie (碧琪)": ["https://ponyhead.com/img/cards/cg189.jpg", "https://ponyhead.com/img/cards/cgPF14.jpg", "https://ponyhead.com/img/cards/cg94.jpg", "https://ponyhead.com/img/cards/cg184.jpg", "https://ponyhead.com/img/cards/cg42.jpg", "https://ponyhead.com/img/cards/cg43.jpg", "https://ponyhead.com/img/cards/cg196.jpg", "https://ponyhead.com/img/cards/cg97.jpg", "https://ponyhead.com/img/cards/cg107.jpg", "https://ponyhead.com/img/cards/cg109.jpg", "https://ponyhead.com/img/cards/cg115.jpg", "https://ponyhead.com/img/cards/cg124.jpg", "https://ponyhead.com/img/cards/cg91.jpg", "https://ponyhead.com/img/cards/cg182.jpg", "https://ponyhead.com/img/cards/cg112.jpg", "https://ponyhead.com/img/cards/cg142.jpg", "https://ponyhead.com/img/cards/cg183.jpg", "https://ponyhead.com/img/cards/cg125.jpg", "https://ponyhead.com/img/cards/cg134.jpg"],
+            "crystal_Rainbow Dash (云宝)": ["https://ponyhead.com/img/cards/cg12.jpg", "https://ponyhead.com/img/cards/cg13.jpg", "https://ponyhead.com/img/cards/cg14.jpg", "https://ponyhead.com/img/cards/cg18.jpg", "https://ponyhead.com/img/cards/cg95.jpg", "https://ponyhead.com/img/cards/cg96.jpg", "https://ponyhead.com/img/cards/cg110.jpg", "https://ponyhead.com/img/cards/cg113.jpg", "https://ponyhead.com/img/cards/cg135.jpg", "https://ponyhead.com/img/cards/cg155.jpg", "https://ponyhead.com/img/cards/cg175.jpg", "https://ponyhead.com/img/cards/cg178.jpg", "https://ponyhead.com/img/cards/cg94.jpg", "https://ponyhead.com/img/cards/cg133.jpg", "https://ponyhead.com/img/cards/cg92.jpg", "https://ponyhead.com/img/cards/cg124.jpg", "https://ponyhead.com/img/cards/cg172.jpg", "https://ponyhead.com/img/cards/cg118.jpg", "https://ponyhead.com/img/cards/cg190.jpg", "https://ponyhead.com/img/cards/cg100.jpg", "https://ponyhead.com/img/cards/cg112.jpg", "https://ponyhead.com/img/cards/cg99.jpg", "https://ponyhead.com/img/cards/cg139.jpg", "https://ponyhead.com/img/cards/cg151.jpg"],
+            "crystal_Applejack (苹果嘉儿)": ["https://ponyhead.com/img/cards/cg189.jpg", "https://ponyhead.com/img/cards/cg20.jpg", "https://ponyhead.com/img/cards/cg21.jpg", "https://ponyhead.com/img/cards/cg194.jpg", "https://ponyhead.com/img/cards/cg103.jpg", "https://ponyhead.com/img/cards/cg122.jpg", "https://ponyhead.com/img/cards/cg137.jpg", "https://ponyhead.com/img/cards/cg203.jpg", "https://ponyhead.com/img/cards/cg174.jpg", "https://ponyhead.com/img/cards/cg176.jpg", "https://ponyhead.com/img/cards/cg172.jpg", "https://ponyhead.com/img/cards/cg91.jpg", "https://ponyhead.com/img/cards/cg182.jpg", "https://ponyhead.com/img/cards/cg112.jpg", "https://ponyhead.com/img/cards/cg183.jpg", "https://ponyhead.com/img/cards/cg132.jpg", "https://ponyhead.com/img/cards/cg148.jpg"],
+            "crystal_Rarity (珍奇)": ["https://ponyhead.com/img/cards/cg94.jpg", "https://ponyhead.com/img/cards/cg108.jpg", "https://ponyhead.com/img/cards/cg111.jpg", "https://ponyhead.com/img/cards/cg97.jpg", "https://ponyhead.com/img/cards/cg172.jpg", "https://ponyhead.com/img/cards/cg168.jpg", "https://ponyhead.com/img/cards/cg70.jpg", "https://ponyhead.com/img/cards/cg71.jpg", "https://ponyhead.com/img/cards/cg72.jpg", "https://ponyhead.com/img/cards/cg74.jpg", "https://ponyhead.com/img/cards/cg93.jpg", "https://ponyhead.com/img/cards/cg112.jpg", "https://ponyhead.com/img/cards/cg114.jpg", "https://ponyhead.com/img/cards/cg130.jpg", "https://ponyhead.com/img/cards/cg140.jpg", "https://ponyhead.com/img/cards/cg204.jpg", "https://ponyhead.com/img/cards/cg167.jpg", "https://ponyhead.com/img/cards/cg177.jpg", "https://ponyhead.com/img/cards/cg179.jpg", "https://ponyhead.com/img/cards/cg120.jpg", "https://ponyhead.com/img/cards/cg183.jpg", "https://ponyhead.com/img/cards/cg127.jpg", "https://ponyhead.com/img/cards/cg143.jpg", "https://ponyhead.com/img/cards/cg188.jpg"],
+            "crystal_Spike (穗龙)": ["https://ponyhead.com/img/cards/cg192.jpg", "https://ponyhead.com/img/cards/cg29.jpg", "https://ponyhead.com/img/cards/cg94.jpg", "https://ponyhead.com/img/cards/cg2.jpg", "https://ponyhead.com/img/cards/cg131.jpg", "https://ponyhead.com/img/cards/cg136.jpg", "https://ponyhead.com/img/cards/cg101.jpg", "https://ponyhead.com/img/cards/cg104.jpg"],
+            "crystal_音韵公主 & 闪耀盔甲": ["https://ponyhead.com/img/cards/cg191.jpg", "https://ponyhead.com/img/cards/cg3.jpg", "https://ponyhead.com/img/cards/cg198.jpg", "https://ponyhead.com/img/cards/cg126.jpg", "https://ponyhead.com/img/cards/cg202.jpg", "https://ponyhead.com/img/cards/cg119.jpg"],
+            "crystal_皇家姐妹 (宇宙公主 & 月亮公主)": ["https://ponyhead.com/img/cards/cgpf11.jpg", "https://ponyhead.com/img/cards/cg53.jpg", "https://ponyhead.com/img/cards/cg54.jpg", "https://ponyhead.com/img/cards/cg144.jpg", "https://ponyhead.com/img/cards/cgpf8.jpg", "https://ponyhead.com/img/cards/cg90.jpg"],
+            "crystal_可爱军团 (小苹花 & 甜心宝宝 & 飞板璐)": ["https://ponyhead.com/img/cards/cg16.jpg", "https://ponyhead.com/img/cards/cg145.jpg", "https://ponyhead.com/img/cards/cg19.jpg", "https://ponyhead.com/img/cards/cg30.jpg", "https://ponyhead.com/img/cards/cg1.jpg", "https://ponyhead.com/img/cards/cg74.jpg"],
+
+            // Promotional - 促销卡 推广系列
+            "promotional_Pinkie Pie (碧琪)": ["https://ponyhead.com/img/cards/gf7.jpg"],
+            "promotional_皇家姐妹 (宇宙公主 & 月亮公主)": ["https://ponyhead.com/img/cards/gf9.jpg"],
+
+            // Absolute Discord - 无序狂潮 绝对无序
+            "discord_Twilight Sparkle (紫悦)": ["https://ponyhead.com/img/cards/ad12.jpg", "https://ponyhead.com/img/cards/ad180.jpg", "https://ponyhead.com/img/cards/ad187.jpg", "https://ponyhead.com/img/cards/ad176.jpg", "https://ponyhead.com/img/cards/ad191.jpg", "https://ponyhead.com/img/cards/ad35.jpg", "https://ponyhead.com/img/cards/ad116.jpg", "https://ponyhead.com/img/cards/ad174.jpg", "https://ponyhead.com/img/cards/adpf6.jpg", "https://ponyhead.com/img/cards/ad44.jpg", "https://ponyhead.com/img/cards/ad48.jpg", "https://ponyhead.com/img/cards/ad87.jpg", "https://ponyhead.com/img/cards/ad100.jpg", "https://ponyhead.com/img/cards/ad103.jpg", "https://ponyhead.com/img/cards/ad105.jpg", "https://ponyhead.com/img/cards/ad118.jpg", "https://ponyhead.com/img/cards/ad153.jpg", "https://ponyhead.com/img/cards/ad188.jpg", "https://ponyhead.com/img/cards/ad60.jpg", "https://ponyhead.com/img/cards/ad94.jpg", "https://ponyhead.com/img/cards/ad106.jpg", "https://ponyhead.com/img/cards/ad120.jpg", "https://ponyhead.com/img/cards/ad121.jpg", "https://ponyhead.com/img/cards/ad175.jpg", "https://ponyhead.com/img/cards/ad181.jpg", "https://ponyhead.com/img/cards/ad66.jpg", "https://ponyhead.com/img/cards/ad117.jpg", "https://ponyhead.com/img/cards/ad148.jpg", "https://ponyhead.com/img/cards/ad172.jpg", "https://ponyhead.com/img/cards/ad83.jpg", "https://ponyhead.com/img/cards/ad166.jpg"],
+            "discord_Fluttershy (柔柔)": ["https://ponyhead.com/img/cards/ad98.jpg", "https://ponyhead.com/img/cards/ad176.jpg", "https://ponyhead.com/img/cards/ad178.jpg", "https://ponyhead.com/img/cards/ad35.jpg", "https://ponyhead.com/img/cards/ad174.jpg", "https://ponyhead.com/img/cards/ad58.jpg", "https://ponyhead.com/img/cards/ad94.jpg", "https://ponyhead.com/img/cards/ad106.jpg", "https://ponyhead.com/img/cards/ad121.jpg", "https://ponyhead.com/img/cards/ad146.jpg", "https://ponyhead.com/img/cards/ad175.jpg", "https://ponyhead.com/img/cards/ad5.jpg", "https://ponyhead.com/img/cards/adpf4.jpg", "https://ponyhead.com/img/cards/ad200.jpg", "https://ponyhead.com/img/cards/ad99.jpg", "https://ponyhead.com/img/cards/ad113.jpg", "https://ponyhead.com/img/cards/ad124.jpg", "https://ponyhead.com/img/cards/ad148.jpg", "https://ponyhead.com/img/cards/ad168.jpg", "https://ponyhead.com/img/cards/ad172.jpg", "https://ponyhead.com/img/cards/ad186.jpg", "https://ponyhead.com/img/cards/ad78.jpg", "https://ponyhead.com/img/cards/ad89.jpg", "https://ponyhead.com/img/cards/ad96.jpg", "https://ponyhead.com/img/cards/ad102.jpg", "https://ponyhead.com/img/cards/ad136.jpg", "https://ponyhead.com/img/cards/ad158.jpg"],
+            "discord_Pinkie Pie (碧琪)": ["https://ponyhead.com/img/cards/ad176.jpg", "https://ponyhead.com/img/cards/ad178.jpg", "https://ponyhead.com/img/cards/adpf8.jpg", "https://ponyhead.com/img/cards/ad34.jpg", "https://ponyhead.com/img/cards/ad35.jpg", "https://ponyhead.com/img/cards/ad36.jpg", "https://ponyhead.com/img/cards/ad108.jpg", "https://ponyhead.com/img/cards/ad127.jpg", "https://ponyhead.com/img/cards/ad132.jpg", "https://ponyhead.com/img/cards/ad204.jpg", "https://ponyhead.com/img/cards/ad169.jpg", "https://ponyhead.com/img/cards/ad174.jpg", "https://ponyhead.com/img/cards/ad57.jpg", "https://ponyhead.com/img/cards/ad90.jpg", "https://ponyhead.com/img/cards/ad94.jpg", "https://ponyhead.com/img/cards/ad106.jpg", "https://ponyhead.com/img/cards/ad121.jpg", "https://ponyhead.com/img/cards/ad172.jpg", "https://ponyhead.com/img/cards/ad80.jpg", "https://ponyhead.com/img/cards/ad96.jpg", "https://ponyhead.com/img/cards/ad107.jpg", "https://ponyhead.com/img/cards/ad136.jpg", "https://ponyhead.com/img/cards/ad160.jpg"],
+            "discord_Rainbow Dash (云宝)": ["https://ponyhead.com/img/cards/adpf2.jpg", "https://ponyhead.com/img/cards/ad12.jpg", "https://ponyhead.com/img/cards/ad194.jpg", "https://ponyhead.com/img/cards/ad111.jpg", "https://ponyhead.com/img/cards/ad115.jpg", "https://ponyhead.com/img/cards/ad119.jpg", "https://ponyhead.com/img/cards/ad122.jpg", "https://ponyhead.com/img/cards/ad152.jpg", "https://ponyhead.com/img/cards/ad205.jpg", "https://ponyhead.com/img/cards/ad171.jpg", "https://ponyhead.com/img/cards/ad182.jpg", "https://ponyhead.com/img/cards/ad187.jpg", "https://ponyhead.com/img/cards/ad129.jpg", "https://ponyhead.com/img/cards/ad178.jpg", "https://ponyhead.com/img/cards/ad174.jpg", "https://ponyhead.com/img/cards/ad87.jpg", "https://ponyhead.com/img/cards/ad149.jpg", "https://ponyhead.com/img/cards/ad90.jpg", "https://ponyhead.com/img/cards/ad94.jpg", "https://ponyhead.com/img/cards/ad106.jpg", "https://ponyhead.com/img/cards/ad121.jpg", "https://ponyhead.com/img/cards/ad172.jpg", "https://ponyhead.com/img/cards/ad81.jpg", "https://ponyhead.com/img/cards/ad102.jpg", "https://ponyhead.com/img/cards/ad136.jpg", "https://ponyhead.com/img/cards/ad162.jpg"],
+            "discord_Applejack (苹果嘉儿)": ["https://ponyhead.com/img/cards/ad12.jpg", "https://ponyhead.com/img/cards/ad98.jpg", "https://ponyhead.com/img/cards/ad176.jpg", "https://ponyhead.com/img/cards/adpf10.jpg", "https://ponyhead.com/img/cards/ad24.jpg", "https://ponyhead.com/img/cards/ad195.jpg", "https://ponyhead.com/img/cards/ad86.jpg", "https://ponyhead.com/img/cards/ad104.jpg", "https://ponyhead.com/img/cards/ad109.jpg", "https://ponyhead.com/img/cards/ad128.jpg", "https://ponyhead.com/img/cards/ad139.jpg", "https://ponyhead.com/img/cards/ad142.jpg", "https://ponyhead.com/img/cards/ad167.jpg", "https://ponyhead.com/img/cards/ad178.jpg", "https://ponyhead.com/img/cards/ad183.jpg", "https://ponyhead.com/img/cards/ad174.jpg", "https://ponyhead.com/img/cards/ad188.jpg", "https://ponyhead.com/img/cards/ad94.jpg", "https://ponyhead.com/img/cards/ad106.jpg", "https://ponyhead.com/img/cards/ad121.jpg", "https://ponyhead.com/img/cards/ad175.jpg", "https://ponyhead.com/img/cards/ad138.jpg", "https://ponyhead.com/img/cards/ad172.jpg", "https://ponyhead.com/img/cards/ad76.jpg", "https://ponyhead.com/img/cards/ad107.jpg", "https://ponyhead.com/img/cards/ad136.jpg", "https://ponyhead.com/img/cards/ad155.jpg"],
+            "discord_Rarity (珍奇)": ["https://ponyhead.com/img/cards/ad12.jpg", "https://ponyhead.com/img/cards/ad176.jpg", "https://ponyhead.com/img/cards/ad135.jpg", "https://ponyhead.com/img/cards/ad191.jpg", "https://ponyhead.com/img/cards/ad178.jpg", "https://ponyhead.com/img/cards/ad183.jpg", "https://ponyhead.com/img/cards/ad174.jpg", "https://ponyhead.com/img/cards/adpf12.jpg", "https://ponyhead.com/img/cards/ad56.jpg", "https://ponyhead.com/img/cards/ad57.jpg", "https://ponyhead.com/img/cards/ad60.jpg", "https://ponyhead.com/img/cards/ad199.jpg", "https://ponyhead.com/img/cards/ad90.jpg", "https://ponyhead.com/img/cards/ad92.jpg", "https://ponyhead.com/img/cards/ad94.jpg", "https://ponyhead.com/img/cards/ad106.jpg", "https://ponyhead.com/img/cards/ad112.jpg", "https://ponyhead.com/img/cards/ad121.jpg", "https://ponyhead.com/img/cards/ad154.jpg", "https://ponyhead.com/img/cards/ad170.jpg", "https://ponyhead.com/img/cards/ad175.jpg", "https://ponyhead.com/img/cards/ad181.jpg", "https://ponyhead.com/img/cards/ad172.jpg", "https://ponyhead.com/img/cards/ad82.jpg", "https://ponyhead.com/img/cards/ad136.jpg", "https://ponyhead.com/img/cards/ad163.jpg"],
+            "discord_Spike (穗龙)": ["https://ponyhead.com/img/cards/ad14.jpg", "https://ponyhead.com/img/cards/ad31.jpg", "https://ponyhead.com/img/cards/ad94.jpg", "https://ponyhead.com/img/cards/ad106.jpg", "https://ponyhead.com/img/cards/ad147.jpg", "https://ponyhead.com/img/cards/ad175.jpg", "https://ponyhead.com/img/cards/ad172.jpg", "https://ponyhead.com/img/cards/ad136.jpg", "https://ponyhead.com/img/cards/ad164.jpg"],
+            "discord_音韵公主 & 闪耀盔甲": ["https://ponyhead.com/img/cards/ad13.jpg", "https://ponyhead.com/img/cards/ad37.jpg", "https://ponyhead.com/img/cards/ad116.jpg", "https://ponyhead.com/img/cards/ad44.jpg", "https://ponyhead.com/img/cards/ad48.jpg", "https://ponyhead.com/img/cards/ad190.jpg", "https://ponyhead.com/img/cards/ad120.jpg"],
+            "discord_皇家姐妹 (宇宙公主 & 月亮公主)": ["https://ponyhead.com/img/cards/ad2.jpg", "https://ponyhead.com/img/cards/ad12.jpg", "https://ponyhead.com/img/cards/ad3.jpg", "https://ponyhead.com/img/cards/ad27.jpg", "https://ponyhead.com/img/cards/ad141.jpg", "https://ponyhead.com/img/cards/ad79.jpg", "https://ponyhead.com/img/cards/adn1.jpg"],
+            "discord_可爱军团 (小苹花 & 甜心宝宝 & 飞板璐)": ["https://ponyhead.com/img/cards/ad15.jpg", "https://ponyhead.com/img/cards/ad3.jpg", "https://ponyhead.com/img/cards/adpf10.jpg", "https://ponyhead.com/img/cards/ad28.jpg", "https://ponyhead.com/img/cards/ad177.jpg", "https://ponyhead.com/img/cards/ad91.jpg", "https://ponyhead.com/img/cards/ad53.jpg", "https://ponyhead.com/img/cards/ad106.jpg"],
+            "discord_Discord (无序)": ["https://ponyhead.com/img/cards/ad9.jpg", "https://ponyhead.com/img/cards/ad13.jpg", "https://ponyhead.com/img/cards/ad180.jpg", "https://ponyhead.com/img/cards/ad185.jpg", "https://ponyhead.com/img/cards/ad23.jpg", "https://ponyhead.com/img/cards/ad183.jpg", "https://ponyhead.com/img/cards/ad4.jpg", "https://ponyhead.com/img/cards/ad30.jpg", "https://ponyhead.com/img/cards/ad197.jpg", "https://ponyhead.com/img/cards/ad116.jpg", "https://ponyhead.com/img/cards/ad203.jpg", "https://ponyhead.com/img/cards/ad123.jpg", "https://ponyhead.com/img/cards/ad192.jpg", "https://ponyhead.com/img/cards/ad44.jpg", "https://ponyhead.com/img/cards/ad87.jpg", "https://ponyhead.com/img/cards/ad101.jpg", "https://ponyhead.com/img/cards/ad110.jpg", "https://ponyhead.com/img/cards/ad190.jpg", "https://ponyhead.com/img/cards/ad57.jpg", "https://ponyhead.com/img/cards/ad94.jpg", "https://ponyhead.com/img/cards/ad114.jpg", "https://ponyhead.com/img/cards/ad120.jpg", "https://ponyhead.com/img/cards/ad121.jpg", "https://ponyhead.com/img/cards/ad68.jpg", "https://ponyhead.com/img/cards/ad88.jpg", "https://ponyhead.com/img/cards/ad113.jpg", "https://ponyhead.com/img/cards/ad125.jpg", "https://ponyhead.com/img/cards/ad130.jpg", "https://ponyhead.com/img/cards/ad172.jpg", "https://ponyhead.com/img/cards/ad186.jpg", "https://ponyhead.com/img/cards/ad80.jpg", "https://ponyhead.com/img/cards/ad89.jpg", "https://ponyhead.com/img/cards/ad95.jpg", "https://ponyhead.com/img/cards/ad107.jpg", "https://ponyhead.com/img/cards/ad136.jpg", "https://ponyhead.com/img/cards/ad150.jpg", "https://ponyhead.com/img/cards/ad155.jpg", "https://ponyhead.com/img/cards/ad157.jpg", "https://ponyhead.com/img/cards/ad206.jpg"],
+            "discord_Queen Chrysalis (虫茧女王)": ["https://ponyhead.com/img/cards/ad193.jpg", "https://ponyhead.com/img/cards/ad202.jpg"],
+
+            // Equestrian Odysseys - 小马利亚历险
+            "odysseys_Twilight Sparkle (紫悦)": ["https://ponyhead.com/img/cards/eo216.jpg", "https://ponyhead.com/img/cards/eo201.jpg", "https://ponyhead.com/img/cards/eo165.jpg", "https://ponyhead.com/img/cards/eo198.jpg", "https://ponyhead.com/img/cards/eo5.jpg", "https://ponyhead.com/img/cards/eo59.jpg", "https://ponyhead.com/img/cards/eo62.jpg", "https://ponyhead.com/img/cards/eo128.jpg", "https://ponyhead.com/img/cards/eo132.jpg", "https://ponyhead.com/img/cards/eo149.jpg", "https://ponyhead.com/img/cards/eo152.jpg", "https://ponyhead.com/img/cards/eo162.jpg", "https://ponyhead.com/img/cards/eo188.jpg", "https://ponyhead.com/img/cards/eo116.jpg", "https://ponyhead.com/img/cards/eo95.jpg", "https://ponyhead.com/img/cards/eo153.jpg", "https://ponyhead.com/img/cards/eo130.jpg", "https://ponyhead.com/img/cards/eo113.jpg", "https://ponyhead.com/img/cards/eo127.jpg", "https://ponyhead.com/img/cards/eo191.jpg"],
+            "odysseys_Fluttershy (柔柔)": ["https://ponyhead.com/img/cards/eo201.jpg", "https://ponyhead.com/img/cards/eo165.jpg", "https://ponyhead.com/img/cards/eo198.jpg", "https://ponyhead.com/img/cards/eo132.jpg", "https://ponyhead.com/img/cards/eo149.jpg", "https://ponyhead.com/img/cards/eo188.jpg", "https://ponyhead.com/img/cards/eo157.jpg", "https://ponyhead.com/img/cards/eo193.jpg", "https://ponyhead.com/img/cards/eo8.jpg", "https://ponyhead.com/img/cards/eo80.jpg", "https://ponyhead.com/img/cards/eo81.jpg", "https://ponyhead.com/img/cards/eo82.jpg", "https://ponyhead.com/img/cards/eo84.jpg", "https://ponyhead.com/img/cards/eo139.jpg", "https://ponyhead.com/img/cards/eo140.jpg", "https://ponyhead.com/img/cards/eo141.jpg", "https://ponyhead.com/img/cards/eo148.jpg", "https://ponyhead.com/img/cards/eo121.jpg", "https://ponyhead.com/img/cards/eo146.jpg", "https://ponyhead.com/img/cards/eo130.jpg", "https://ponyhead.com/img/cards/eo163.jpg", "https://ponyhead.com/img/cards/eo181.jpg", "https://ponyhead.com/img/cards/eo191.jpg"],
+            "odysseys_Pinkie Pie (碧琪)": ["https://ponyhead.com/img/cards/eo216.jpg", "https://ponyhead.com/img/cards/eo4.jpg", "https://ponyhead.com/img/cards/eo45.jpg", "https://ponyhead.com/img/cards/eo46.jpg", "https://ponyhead.com/img/cards/eo168.jpg", "https://ponyhead.com/img/cards/eo186.jpg", "https://ponyhead.com/img/cards/eo132.jpg", "https://ponyhead.com/img/cards/eo149.jpg", "https://ponyhead.com/img/cards/eo188.jpg", "https://ponyhead.com/img/cards/eo208.jpg", "https://ponyhead.com/img/cards/eo116.jpg", "https://ponyhead.com/img/cards/eo157.jpg", "https://ponyhead.com/img/cards/eo110.jpg", "https://ponyhead.com/img/cards/eo130.jpg", "https://ponyhead.com/img/cards/eo113.jpg", "https://ponyhead.com/img/cards/eo126.jpg", "https://ponyhead.com/img/cards/eo131.jpg", "https://ponyhead.com/img/cards/eo145.jpg", "https://ponyhead.com/img/cards/eo164.jpg", "https://ponyhead.com/img/cards/eo191.jpg"],
+            "odysseys_Rainbow Dash (云宝)": ["https://ponyhead.com/img/cards/eo1.jpg", "https://ponyhead.com/img/cards/eo14.jpg", "https://ponyhead.com/img/cards/eo15.jpg", "https://ponyhead.com/img/cards/eo16.jpg", "https://ponyhead.com/img/cards/eo120.jpg", "https://ponyhead.com/img/cards/eo161.jpg", "https://ponyhead.com/img/cards/eo216.jpg", "https://ponyhead.com/img/cards/eo194.jpg", "https://ponyhead.com/img/cards/eo13.jpg", "https://ponyhead.com/img/cards/eo198.jpg", "https://ponyhead.com/img/cards/eo149.jpg", "https://ponyhead.com/img/cards/eo188.jpg", "https://ponyhead.com/img/cards/eo123.jpg", "https://ponyhead.com/img/cards/eo134.jpg", "https://ponyhead.com/img/cards/eo153.jpg", "https://ponyhead.com/img/cards/eo130.jpg", "https://ponyhead.com/img/cards/eo113.jpg", "https://ponyhead.com/img/cards/eo176.jpg", "https://ponyhead.com/img/cards/eo191.jpg"],
+            "odysseys_Applejack (苹果嘉儿)": ["https://ponyhead.com/img/cards/eo16.jpg", "https://ponyhead.com/img/cards/eo194.jpg", "https://ponyhead.com/img/cards/eo201.jpg", "https://ponyhead.com/img/cards/eo2.jpg", "https://ponyhead.com/img/cards/eo24.jpg", "https://ponyhead.com/img/cards/eo25.jpg", "https://ponyhead.com/img/cards/eo165.jpg", "https://ponyhead.com/img/cards/eo169.jpg", "https://ponyhead.com/img/cards/eo195.jpg", "https://ponyhead.com/img/cards/eo132.jpg", "https://ponyhead.com/img/cards/eo149.jpg", "https://ponyhead.com/img/cards/eo188.jpg", "https://ponyhead.com/img/cards/eo116.jpg", "https://ponyhead.com/img/cards/eo157.jpg", "https://ponyhead.com/img/cards/eo187.jpg", "https://ponyhead.com/img/cards/eo125.jpg", "https://ponyhead.com/img/cards/eo211.jpg", "https://ponyhead.com/img/cards/eo110.jpg", "https://ponyhead.com/img/cards/eo151.jpg", "https://ponyhead.com/img/cards/eo130.jpg", "https://ponyhead.com/img/cards/eo113.jpg", "https://ponyhead.com/img/cards/eo191.jpg"],
+            "odysseys_Rarity (珍奇)": ["https://ponyhead.com/img/cards/eo216.jpg", "https://ponyhead.com/img/cards/eo165.jpg", "https://ponyhead.com/img/cards/eo198.jpg", "https://ponyhead.com/img/cards/eo186.jpg", "https://ponyhead.com/img/cards/eo132.jpg", "https://ponyhead.com/img/cards/eo149.jpg", "https://ponyhead.com/img/cards/eo188.jpg", "https://ponyhead.com/img/cards/eo7.jpg", "https://ponyhead.com/img/cards/eo72.jpg", "https://ponyhead.com/img/cards/eo73.jpg", "https://ponyhead.com/img/cards/eo115.jpg", "https://ponyhead.com/img/cards/eo116.jpg", "https://ponyhead.com/img/cards/eo157.jpg", "https://ponyhead.com/img/cards/eo158.jpg", "https://ponyhead.com/img/cards/eo160.jpg", "https://ponyhead.com/img/cards/eo164.jpg", "https://ponyhead.com/img/cards/eo187.jpg", "https://ponyhead.com/img/cards/eo197.jpg", "https://ponyhead.com/img/cards/eo212.jpg", "https://ponyhead.com/img/cards/eo150.jpg", "https://ponyhead.com/img/cards/eo130.jpg", "https://ponyhead.com/img/cards/eo113.jpg", "https://ponyhead.com/img/cards/eo163.jpg", "https://ponyhead.com/img/cards/eo191.jpg"],
+            "odysseys_Spike (穗龙)": ["https://ponyhead.com/img/cards/eo119.jpg", "https://ponyhead.com/img/cards/eo216.jpg", "https://ponyhead.com/img/cards/eo198.jpg", "https://ponyhead.com/img/cards/eo168.jpg", "https://ponyhead.com/img/cards/eo60.jpg", "https://ponyhead.com/img/cards/eo207.jpg", "https://ponyhead.com/img/cards/eo136.jpg", "https://ponyhead.com/img/cards/eo66.jpg", "https://ponyhead.com/img/cards/eo75.jpg", "https://ponyhead.com/img/cards/eo157.jpg", "https://ponyhead.com/img/cards/eo141.jpg", "https://ponyhead.com/img/cards/eo103.jpg", "https://ponyhead.com/img/cards/eo106.jpg"],
+            "odysseys_音韵公主 & 闪耀盔甲": ["https://ponyhead.com/img/cards/eo105.jpg", "https://ponyhead.com/img/cards/eo94.jpg", "https://ponyhead.com/img/cards/eo203.jpg"],
+            "odysseys_皇家姐妹 (宇宙公主 & 月亮公主)": ["https://ponyhead.com/img/cards/eo58.jpg", "https://ponyhead.com/img/cards/eo89.jpg", "https://ponyhead.com/img/cards/eo90.jpg", "https://ponyhead.com/img/cards/eo209.jpg", "https://ponyhead.com/img/cards/eo184.jpg", "https://ponyhead.com/img/cards/eo99.jpg", "https://ponyhead.com/img/cards/eo174.jpg"],
+            "odysseys_可爱军团 (小苹花 & 甜心宝宝 & 飞板璐)": ["https://ponyhead.com/img/cards/eo17.jpg", "https://ponyhead.com/img/cards/eo18.jpg", "https://ponyhead.com/img/cards/eo22.jpg", "https://ponyhead.com/img/cards/eo23.jpg", "https://ponyhead.com/img/cards/eo25.jpg", "https://ponyhead.com/img/cards/eo118.jpg", "https://ponyhead.com/img/cards/eo190.jpg", "https://ponyhead.com/img/cards/eo195.jpg", "https://ponyhead.com/img/cards/eo36.jpg", "https://ponyhead.com/img/cards/eo76.jpg", "https://ponyhead.com/img/cards/eo77.jpg", "https://ponyhead.com/img/cards/eo137.jpg", "https://ponyhead.com/img/cards/eo184.jpg", "https://ponyhead.com/img/cards/eo99.jpg", "https://ponyhead.com/img/cards/eo117.jpg", "https://ponyhead.com/img/cards/eo146.jpg", "https://ponyhead.com/img/cards/eo200.jpg"],
+            
+            // High Magic - 高阶魔法
+            "highmagic_Twilight Sparkle (紫悦)": ["https://ponyhead.com/img/cards/hm85.jpg", "https://ponyhead.com/img/cards/hm89.jpg", "https://ponyhead.com/img/cards/hm123.jpg", "https://ponyhead.com/img/cards/hm137.jpg"],
+            "highmagic_Fluttershy (柔柔)": ["https://ponyhead.com/img/cards/hm85.jpg", "https://ponyhead.com/img/cards/hm106.jpg", "https://ponyhead.com/img/cards/hm109.jpg"],
+            "highmagic_Pinkie Pie (碧琪)": ["https://ponyhead.com/img/cards/hm66.jpg", "https://ponyhead.com/img/cards/hm97.jpg", "https://ponyhead.com/img/cards/hm85.jpg", "https://ponyhead.com/img/cards/hm92.jpg", "https://ponyhead.com/img/cards/hm111.jpg"],
+            "highmagic_Rainbow Dash (云宝)": ["https://ponyhead.com/img/cards/hm66.jpg", "https://ponyhead.com/img/cards/hm81.jpg", "https://ponyhead.com/img/cards/hm85.jpg", "https://ponyhead.com/img/cards/hm137.jpg"],
+            "highmagic_Applejack (苹果嘉儿)": ["https://ponyhead.com/img/cards/hm85.jpg", "https://ponyhead.com/img/cards/hm102.jpg"],
+            "highmagic_Rarity (珍奇)": ["https://ponyhead.com/img/cards/hm85.jpg", "https://ponyhead.com/img/cards/hm137.jpg"],
+            "highmagic_Spike (穗龙)": ["https://ponyhead.com/img/cards/hm72.jpg", "https://ponyhead.com/img/cards/hm137.jpg"],
+            "highmagic_音韵公主 & 闪耀盔甲": ["https://ponyhead.com/img/cards/hm89.jpg"],
+            "highmagic_皇家姐妹 (宇宙公主 & 月亮公主)": ["https://ponyhead.com/img/cards/hm150.jpg"],
+            "highmagic_可爱军团 (小苹花 & 甜心宝宝 & 飞板璐)": ["https://ponyhead.com/img/cards/hm90.jpg"],
+            "highmagic_Discord (无序)": ["https://ponyhead.com/img/cards/hm78.jpg", "https://ponyhead.com/img/cards/hm89.jpg"],
+            "highmagic_Starlight Glimmer (星光熠熠)": ["https://ponyhead.com/img/cards/hm119.jpg"],
+            
+            // High Magic 新增的杂项角色 (英文名已补全)
+            "highmagic_Cheese Sandwich (芝士三明治)": ["https://ponyhead.com/img/cards/hm105.jpg"],
+            "highmagic_Wonderbolts (闪电飞马队)": ["https://ponyhead.com/img/cards/hm4.jpg", "https://ponyhead.com/img/cards/hm12.jpg"],
+            "highmagic_Davenport (路马)": ["https://ponyhead.com/img/cards/hm44.jpg", "https://ponyhead.com/img/cards/hm36.jpg", "https://ponyhead.com/img/cards/hm26.jpg", "https://ponyhead.com/img/cards/hm29.jpg", "https://ponyhead.com/img/cards/hm18.jpg", "https://ponyhead.com/img/cards/hm22.jpg", "https://ponyhead.com/img/cards/hm6.jpg"],
+            "highmagic_Little Strongheart (耗牛)": ["https://ponyhead.com/img/cards/hm7.jpg"],
+            "highmagic_Canterlot Citizens (坎特洛特小马)": ["https://ponyhead.com/img/cards/hm47.jpg", "https://ponyhead.com/img/cards/hm49.jpg"],
+            "highmagic_Ponyville Schoolhouse (小马谷学校)": ["https://ponyhead.com/img/cards/hm35.jpg"],
+            "highmagic_Magical Creatures (魔法生物)": ["https://ponyhead.com/img/cards/hm57.jpg", "https://ponyhead.com/img/cards/hm63.jpg", "https://ponyhead.com/img/cards/hm87.jpg", "https://ponyhead.com/img/cards/hm129.jpg"],
+            "highmagic_Landmark (地标建筑)": ["https://ponyhead.com/img/cards/hm116.jpg"],
+            "highmagic_Trixie (特丽克西)": ["https://ponyhead.com/img/cards/hm1.jpg", "https://ponyhead.com/img/cards/hm42.jpg", "https://ponyhead.com/img/cards/hm98.jpg"],
+            "highmagic_Ponyville Residents (小马谷居民)": ["https://ponyhead.com/img/cards/hm54.jpg", "https://ponyhead.com/img/cards/hm61.jpg", "https://ponyhead.com/img/cards/hm24.jpg", "https://ponyhead.com/img/cards/hm25.jpg", "https://ponyhead.com/img/cards/hm28.jpg", "https://ponyhead.com/img/cards/hm3.jpg", "https://ponyhead.com/img/cards/hm5.jpg"],
+            "highmagic_Pets (宠物)": ["https://ponyhead.com/img/cards/hm60.jpg", "https://ponyhead.com/img/cards/hm48.jpg", "https://ponyhead.com/img/cards/hm37.jpg", "https://ponyhead.com/img/cards/hm23.jpg"],
+            "highmagic_Tree Hugger (树之怀)": ["https://ponyhead.com/img/cards/hm146.jpg"],
+            "highmagic_Critters (小动物)": ["https://ponyhead.com/img/cards/hm86.jpg"],
+            "highmagic_Daring Do (无畏天马)": ["https://ponyhead.com/img/cards/hm45.jpg"],
+            "highmagic_DJ Pon-3 & Octavia (DJ&奥塔维亚)": ["https://ponyhead.com/img/cards/hm46.jpg"],
+            "highmagic_Photo Finish (美照菲尼莎)": ["https://ponyhead.com/img/cards/hm144.jpg"],
+            "highmagic_Zecora (可拉)": ["https://ponyhead.com/img/cards/hm43.jpg"],
+            "highmagic_Ditzy Doo (小呆)": ["https://ponyhead.com/img/cards/hm27.jpg"],
+            "highmagic_Snips & Snails (斯内普+斯尼普)": ["https://ponyhead.com/img/cards/hm32.jpg"],
+            "highmagic_Sunset Shimmer (余晖烁烁)": ["https://ponyhead.com/img/cards/hm33.jpg"],
+            "highmagic_Sugar Belle (舒歌贝)": ["https://ponyhead.com/img/cards/hm34.jpg"],
+            "highmagic_Big McIntosh (麦托什)": ["https://ponyhead.com/img/cards/hm0.jpg"],
+            "highmagic_Granny Smith (史密夫婆婆)": ["https://ponyhead.com/img/cards/hm19.jpg"],
+            "highmagic_Maud Pie (灰琪)": ["https://ponyhead.com/img/cards/hm20.jpg"]
         };
 
         const DEFAULT_SERIES = [
@@ -595,9 +860,18 @@
         let cardsData = [];   
         let trashData = [];
 
-        const M6_NAMES = [
-            "Twilight Sparkle (紫悦)", "Fluttershy (柔柔)", "Pinkie Pie (碧琪)",
-            "Rainbow Dash (云宝)", "Applejack (苹果嘉儿)", "Rarity (珍奇)"
+        // 定义合并后的常驻分组
+        const GROUPED_ROLES = [
+            { name: "Twilight Sparkle (紫悦)", isGroup: false, isCore: true },
+            { name: "Fluttershy (柔柔)", isGroup: false, isCore: true },
+            { name: "Pinkie Pie (碧琪)", isGroup: false, isCore: true },
+            { name: "Rainbow Dash (云宝)", isGroup: false, isCore: true },
+            { name: "Applejack (苹果嘉儿)", isGroup: false, isCore: true },
+            { name: "Rarity (珍奇)", isGroup: false, isCore: true },
+            { name: "Spike (穗龙)", isGroup: false, isCore: true },
+            { name: "音韵公主 & 闪耀盔甲", isGroup: true, isCore: true },
+            { name: "皇家姐妹 (宇宙公主 & 月亮公主)", isGroup: true, isCore: true },
+            { name: "可爱军团 (小苹花 & 甜心宝宝 & 飞板璐)", isGroup: true, isCore: true }
         ];
 
         // 存储 Keys
@@ -622,26 +896,41 @@
 
         function initCardsData() {
             cardsData = [];
-            SERIES_LIST.forEach(series => {
+            SERIES_LIST.forEach((series, index) => {
                 if (series.id === 'all') return;
 
-                M6_NAMES.forEach(name => {
+                // 1. 为每个系列加入合并后的角色
+                GROUPED_ROLES.forEach(role => {
                     cardsData.push({ 
-                        id: `${series.id}_${name}`, name: name, series: series.id, isM6: true, images: [], owned: false
+                        id: `${series.id}_${role.name}`, 
+                        name: role.name, 
+                        series: series.id, 
+                        isGroup: role.isGroup,
+                        isCore: role.isCore,
+                        images: [], 
+                        owned: false
                     });
                 });
                 
+                // 2. 特定系列的特殊角色 (根据需求定制)
                 if (series.id === "discord") {
-                    ["Discord (无序)", "Queen Chrysalis (虫茧女王)"].forEach(n => cardsData.push({ id: `${series.id}_${n}`, name: n, series: series.id, isM6: false, images: [], owned: false }));
-                }
-                if (series.id === "crystal") {
-                    ["Apple Bloom (小苹花)", "Sweetie Belle (甜心宝宝)", "Scootaloo (飞板璐)"].forEach(n => cardsData.push({ id: `${series.id}_${n}`, name: n, series: series.id, isM6: false, images: [], owned: false }));
-                }
-                if (series.id === "canterlot") {
-                    ["Princess Celestia (宇宙公主)", "Princess Luna (月亮公主)"].forEach(n => cardsData.push({ id: `${series.id}_${n}`, name: n, series: series.id, isM6: false, images: [], owned: false }));
+                    cardsData.push({ id: `${series.id}_Discord (无序)`, name: "Discord (无序)", series: series.id, isGroup: false, isCore: false, images: [], owned: false });
+                    cardsData.push({ id: `${series.id}_Queen Chrysalis (虫茧女王)`, name: "Queen Chrysalis (虫茧女王)", series: series.id, isGroup: false, isCore: false, images: [], owned: false });
                 }
                 if (series.id === "promotional") {
-                    ["Flash Sentry (闪卫)", "Coloratura (彩音)"].forEach(n => cardsData.push({ id: `${series.id}_${n}`, name: n, series: series.id, isM6: false, images: [], owned: false }));
+                    cardsData.push({ id: `${series.id}_Flash Sentry (闪卫)`, name: "Flash Sentry (闪卫)", series: series.id, isGroup: false, isCore: false, images: [], owned: false });
+                    cardsData.push({ id: `${series.id}_Coloratura (彩音)`, name: "Coloratura (彩音)", series: series.id, isGroup: false, isCore: false, images: [], owned: false });
+                }
+                // 在 odysseys（小马利亚历险）及之后的所有系列，添加无序和星光熠熠
+                if (index >= 7 && series.id !== 'discord') {
+                    cardsData.push({ id: `${series.id}_Discord (无序)`, name: "Discord (无序)", series: series.id, isGroup: false, isCore: false, images: [], owned: false });
+                    cardsData.push({ id: `${series.id}_Starlight Glimmer (星光熠熠)`, name: "Starlight Glimmer (星光熠熠)", series: series.id, isGroup: false, isCore: false, images: [], owned: false });
+                }
+                // High Magic 专属其他角色
+                if (series.id === "highmagic") {
+                    ["Cheese Sandwich (芝士三明治)", "Wonderbolts (闪电飞马队)", "Davenport (路马)", "Little Strongheart (耗牛)", "Canterlot Citizens (坎特洛特小马)", "Ponyville Schoolhouse (小马谷学校)", "Magical Creatures (魔法生物)", "Landmark (地标建筑)", "Trixie (特丽克西)", "Ponyville Residents (小马谷居民)", "Pets (宠物)", "Tree Hugger (树之怀)", "Critters (小动物)", "Daring Do (无畏天马)", "DJ Pon-3 & Octavia (DJ&奥塔维亚)", "Photo Finish (美照菲尼莎)", "Zecora (可拉)", "Ditzy Doo (小呆)", "Snips & Snails (斯内普+斯尼普)", "Sunset Shimmer (余晖烁烁)", "Sugar Belle (舒歌贝)", "Big McIntosh (麦托什)", "Granny Smith (史密夫婆婆)", "Maud Pie (灰琪)"].forEach(n => {
+                        cardsData.push({ id: `${series.id}_${n}`, name: n, series: series.id, isGroup: false, isCore: false, images: [], owned: false });
+                    });
                 }
             });
         }
@@ -717,7 +1006,7 @@
         const statsDisplay = document.getElementById('statsDisplay');
         const loadingOverlay = document.getElementById('loadingOverlay');
         const globalFileInput = document.getElementById('globalFileInput');
-
+        
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         const openSidebarBtn = document.getElementById('openSidebarBtn');
@@ -760,11 +1049,32 @@
         const linkCancelBtn = document.getElementById('linkCancelBtn');
         const linkConfirmBtn = document.getElementById('linkConfirmBtn');
 
+        // 分类功能 DOM
+        const categorizeBtn = document.getElementById('categorizeBtn');
+        const categorizeOverlay = document.getElementById('categorizeOverlay');
+        const categorizeCancelBtn = document.getElementById('categorizeCancelBtn');
+        const categorizeConfirmBtn = document.getElementById('categorizeConfirmBtn');
+        const categorizeLinkInput = document.getElementById('categorizeLinkInput');
+        const categorizePreview = document.getElementById('categorizePreview');
+        const tabExisting = document.getElementById('tabExisting');
+        const tabNew = document.getElementById('tabNew');
+        const existingSelectGroup = document.getElementById('existingSelectGroup');
+        const newRoleInputGroup = document.getElementById('newRoleInputGroup');
+        const categorizeRoleList = document.getElementById('categorizeRoleList');
+        const categorizeSeriesSelect = document.getElementById('categorizeSeriesSelect');
+        const categorizeNewRoleName = document.getElementById('categorizeNewRoleName');
+        const categorizeQueueInfo = document.getElementById('categorizeQueueInfo');
+
         let currentMode = 'link'; 
+        let categorizeMode = 'existing';
         let viewerState = { images: [], currentIndex: 0, cardName: '', isBuiltin: [] };
         let currentUploadCardId = null; 
         let isUploading = false;
         let linkTargetCardId = null; 
+
+        // 队列分类相关变量
+        let linkQueue = [];
+        let currentQueueIndex = 0;
 
         function openSidebar() { sidebar.classList.add('active'); sidebarOverlay.classList.add('active'); }
         function closeSidebar() { sidebar.classList.remove('active'); sidebarOverlay.classList.remove('active'); }
@@ -777,6 +1087,277 @@
         openTrashBtn.addEventListener('click', openTrash);
         closeTrashBtn.addEventListener('click', closeTrash);
         trashOverlay.addEventListener('click', (e) => { if (e.target === trashOverlay) closeTrash(); });
+
+        // 分类功能主逻辑
+        categorizeBtn.addEventListener('click', () => {
+            linkQueue = [];
+            currentQueueIndex = 0;
+            categorizeLinkInput.value = '';
+            categorizeNewRoleName.value = '';
+            categorizePreview.innerHTML = '';
+            categorizeQueueInfo.textContent = '';
+            categorizeMode = 'existing';
+            tabExisting.classList.add('active');
+            tabNew.classList.remove('active');
+            existingSelectGroup.style.display = 'block';
+            newRoleInputGroup.style.display = 'none';
+
+            // 获取当前停留的系列
+            const currentSeries = seriesFilter.value;
+            
+            // 1. 填充多选角色列表
+            categorizeRoleList.innerHTML = '';
+            SERIES_LIST.forEach(series => {
+                if (series.id === 'all') return;
+                const roles = cardsData.filter(c => c.series === series.id);
+                if (roles.length === 0) return;
+
+                const header = document.createElement('div');
+                header.style.cssText = 'font-size:0.8rem; font-weight:bold; color:#a57a96; margin-top:0.5rem; margin-bottom:0.2rem; display: flex; justify-content: space-between; align-items: center;';
+                header.innerHTML = `<span>${series.name}</span>`;
+                
+                // 如果当前是停留的系列，把表头高亮
+                if (series.id === currentSeries) {
+                    header.style.color = '#b3529a';
+                }
+
+                categorizeRoleList.appendChild(header);
+
+                roles.forEach(role => {
+                    const label = document.createElement('label');
+                    // 注意：这里渲染时默认不勾选 checked
+                    label.innerHTML = `<input type="checkbox" value="${role.id}" data-series="${series.id}"> <span>${role.name}</span>`;
+                    
+                    // 如果属于当前停留的系列，给个视觉提示（浅色背景），但不勾选
+                    if (series.id === currentSeries) {
+                        label.style.background = '#fdf8fc';
+                        label.style.border = '1px solid #f0cee4';
+                    }
+                    
+                    // 如果这个角色已经有当前预览的链接，显示移除按钮
+                    const currentLink = linkQueue[currentQueueIndex];
+                    if (currentLink && role.images && role.images.includes(currentLink)) {
+                        const removeBtn = document.createElement('button');
+                        removeBtn.className = 'role-remove-btn';
+                        removeBtn.textContent = '移除';
+                        removeBtn.onclick = (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (confirm(`确定要从「${role.name}」中移除这张图片吗？`)) {
+                                const idx = role.images.indexOf(currentLink);
+                                if (idx > -1) {
+                                    role.images.splice(idx, 1);
+                                    saveAllImagesToStorage();
+                                    render();
+                                    // 刷新列表
+                                    categorizeBtn.click();
+                                }
+                            }
+                        };
+                        label.appendChild(removeBtn);
+                    }
+                    
+                    categorizeRoleList.appendChild(label);
+                });
+            });
+
+            // 2. 填充系列下拉框 (用于新建)
+            categorizeSeriesSelect.innerHTML = '';
+            SERIES_LIST.forEach(series => {
+                if (series.id === 'all') return;
+                const opt = document.createElement('option');
+                opt.value = series.id;
+                opt.textContent = series.name;
+                categorizeSeriesSelect.appendChild(opt);
+            });
+
+            // 智能默认选中当前系列（针对新建面板）
+            if (currentSeries && currentSeries !== 'all') {
+                categorizeSeriesSelect.value = currentSeries;
+            }
+
+            // 如果当前在特定系列，自动把列表滚动到对应位置
+            if (currentSeries && currentSeries !== 'all') {
+                setTimeout(() => {
+                    const headers = categorizeRoleList.querySelectorAll('div');
+                    for (let h of headers) {
+                        if (h.textContent.includes(SERIES_LIST.find(s => s.id === currentSeries).name)) {
+                            h.scrollIntoView({ block: 'start' });
+                            break;
+                        }
+                    }
+                }, 50);
+            }
+
+            categorizeOverlay.classList.add('active');
+        });
+
+        function closeCategorizeDialog() { categorizeOverlay.classList.remove('active'); }
+        categorizeCancelBtn.addEventListener('click', closeCategorizeDialog);
+        categorizeOverlay.addEventListener('click', (e) => { if (e.target === categorizeOverlay) closeCategorizeDialog(); });
+
+        tabExisting.addEventListener('click', () => {
+            categorizeMode = 'existing';
+            tabExisting.classList.add('active');
+            tabNew.classList.remove('active');
+            existingSelectGroup.style.display = 'block';
+            newRoleInputGroup.style.display = 'none';
+        });
+
+        tabNew.addEventListener('click', () => {
+            categorizeMode = 'new';
+            tabNew.classList.add('active');
+            tabExisting.classList.remove('active');
+            existingSelectGroup.style.display = 'none';
+            newRoleInputGroup.style.display = 'flex';
+        });
+
+        // 监听输入，生成预览并解析队列
+        categorizeLinkInput.addEventListener('input', () => {
+            const text = categorizeLinkInput.value.trim();
+            const links = text.split('\n').map(l => l.trim()).filter(l => l && /^https?:\/\//i.test(l));
+            
+            // 重新解析队列
+            linkQueue = links;
+            currentQueueIndex = 0;
+            
+            renderCategorizePreview();
+        });
+
+        function renderCategorizePreview() {
+            categorizePreview.innerHTML = '';
+            if (linkQueue.length === 0) {
+                categorizeQueueInfo.textContent = '';
+                return;
+            }
+
+            // 如果队列还有，展示当前项的预览，以及剩余数量
+            const currentLink = linkQueue[currentQueueIndex];
+            if (currentLink) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'preview-item';
+                
+                const img = document.createElement('img');
+                img.src = currentLink;
+                wrapper.appendChild(img);
+
+                const delBtn = document.createElement('button');
+                delBtn.className = 'preview-delete-btn';
+                delBtn.innerHTML = '✕';
+                delBtn.title = '删除此链接';
+                delBtn.addEventListener('click', () => {
+                    // 如果是从目标角色列表中删除
+                    let deletedFromCard = false;
+                    cardsData.forEach(c => {
+                        const idx = c.images.indexOf(currentLink);
+                        if (idx > -1) {
+                            c.images.splice(idx, 1);
+                            deletedFromCard = true;
+                        }
+                    });
+                    
+                    if (deletedFromCard) {
+                        saveAllImagesToStorage();
+                        render();
+                        alert('已将该链接从所有含该图的目标角色中移除。');
+                    }
+                    
+                    // 从队列中移除当前项
+                    linkQueue.splice(currentQueueIndex, 1);
+                    
+                    if (linkQueue.length === 0) {
+                        categorizeLinkInput.value = '';
+                    } else {
+                        categorizeLinkInput.value = linkQueue.join('\n');
+                    }
+                    
+                    renderCategorizePreview();
+                });
+                wrapper.appendChild(delBtn);
+
+                categorizePreview.appendChild(wrapper);
+
+                if (linkQueue.length > 1) {
+                    categorizeQueueInfo.textContent = `待分类: ${linkQueue.length - currentQueueIndex} / ${linkQueue.length}`;
+                } else {
+                    categorizeQueueInfo.textContent = `待分类: 1 / 1`;
+                }
+            } else {
+                // 分类完毕
+                categorizePreview.innerHTML = '<span style="font-size:0.8rem;color:#1b5e3e;">✅ 所有图片已分类完成！</span>';
+                categorizeQueueInfo.textContent = '';
+                categorizeLinkInput.value = '';
+            }
+        }
+
+        categorizeConfirmBtn.addEventListener('click', () => {
+            if (linkQueue.length === 0 || currentQueueIndex >= linkQueue.length) {
+                alert('没有待分类的链接');
+                return;
+            }
+
+            const currentLink = linkQueue[currentQueueIndex];
+
+            if (categorizeMode === 'existing') {
+                const checkedBoxes = categorizeRoleList.querySelectorAll('input[type="checkbox"]:checked');
+                if (checkedBoxes.length === 0) { alert('请至少勾选一个目标角色'); return; }
+
+                checkedBoxes.forEach(cb => {
+                    const cardId = cb.value;
+                    const card = cardsData.find(c => c.id === cardId);
+                    if (card) {
+                        if (!card.images.includes(currentLink)) {
+                            card.images.push(currentLink);
+                        }
+                    }
+                });
+                saveAllImagesToStorage();
+            } else {
+                const seriesId = categorizeSeriesSelect.value;
+                const newRoleName = categorizeNewRoleName.value.trim();
+                if (!newRoleName) { alert('请输入新角色名称'); return; }
+
+                let existingCard = cardsData.find(c => c.series === seriesId && c.name === newRoleName);
+                if (!existingCard) {
+                    existingCard = {
+                        id: `${seriesId}_${newRoleName}`,
+                        name: newRoleName,
+                        series: seriesId,
+                        isGroup: false,
+                        isCore: false,
+                        images: [],
+                        owned: false
+                    };
+                    cardsData.push(existingCard);
+                }
+                
+                if (!existingCard.images.includes(currentLink)) {
+                    existingCard.images.push(currentLink);
+                }
+                saveAllImagesToStorage();
+            }
+
+            // 处理队列下一个
+            currentQueueIndex++;
+            if (currentQueueIndex < linkQueue.length) {
+                // 队列还有，继续
+                renderCategorizePreview();
+                // 可以加个小提示
+                categorizeConfirmBtn.textContent = '继续分类下一张';
+                categorizeConfirmBtn.style.background = '#f57f17';
+            } else {
+                // 队列结束
+                renderCategorizePreview();
+                categorizeConfirmBtn.textContent = '确认分类';
+                categorizeConfirmBtn.style.background = '#b3529a';
+                render();
+                setTimeout(() => {
+                    alert('✅ 所有图片分类完成！');
+                    closeCategorizeDialog();
+                }, 100);
+            }
+        });
+
 
         function renderTrash() {
             trashList.innerHTML = '';
@@ -940,12 +1521,11 @@
             } else if (currentMode === 'importCode') {
                 if (!val) { linkError.textContent = '识别码不能为空'; linkError.classList.add('active'); return; }
                 try {
-                    const decoded = atob(val); // Base64 解码
-                    const parsed = JSON.parse(decoded); // 解析 JSON
+                    const decoded = atob(val);
+                    const parsed = JSON.parse(decoded);
                     
                     if (!Array.isArray(parsed)) throw new Error('格式不正确');
                     
-                    // 还原数据
                     ownedImagesSet = new Set(parsed);
                     saveOwnedImagesToStorage();
                     closeLinkDialog();
@@ -972,14 +1552,13 @@
             openGenericDialog('newSeries', '增加新系列', '输入系列名称（例如：My Little Pony 新系列）', '系列名称...');
         });
 
-        // --- 识别码功能 ---
         genCodeBtn.addEventListener('click', () => {
             if (ownedImagesSet.size === 0) {
                 alert('你还没有标记任何图片为“已拥有”哦！');
                 return;
             }
             const str = JSON.stringify([...ownedImagesSet]);
-            const code = btoa(str); // Base64 编码
+            const code = btoa(str);
             exportTitle.textContent = '🔑 你的专属图鉴识别码';
             exportTextArea.value = code;
             exportOverlay.classList.add('active');
@@ -990,7 +1569,7 @@
             openGenericDialog('importCode', '输入图鉴识别码', '粘贴你之前生成的专属识别码以恢复标记', '在此粘贴识别码...');
         });
 
-        // --- 导出图片链接 ---
+        // --- 提取所有图片链接（排除内置） ---
         exportDataBtn.addEventListener('click', () => {
             try {
                 let outputText = "";
@@ -1003,9 +1582,6 @@
 
                     seriesCards.forEach(card => {
                         let cardLinks = [];
-                        if (BUILTIN_IMAGES[card.id]) {
-                            cardLinks.push(...BUILTIN_IMAGES[card.id]);
-                        }
                         if (card.images && card.images.length > 0) {
                             card.images.forEach(url => {
                                 if (url.startsWith('http://') || url.startsWith('https://')) {
@@ -1078,7 +1654,6 @@
             }
         });
 
-        // 导入 JSON
         importDataBtn.addEventListener('click', () => {
             importFileInput.click();
         });
@@ -1123,7 +1698,6 @@
             reader.readAsText(file);
         });
 
-        // 查看器
         function openViewer(cardName, images, startIndex = 0, builtinFlags = []) {
             if (!images || images.length === 0) return;
             viewerState = { images: [...images], currentIndex: Math.min(startIndex, images.length - 1), cardName: cardName, isBuiltin: [...builtinFlags] };
@@ -1165,7 +1739,6 @@
             if (e.key === 'ArrowRight') viewerGoNext();
         });
 
-        // 上传图片
         globalFileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file || !currentUploadCardId) { globalFileInput.value = ''; return; }
@@ -1194,19 +1767,17 @@
             reader.readAsDataURL(file);
         });
 
-        // --- 渲染主列表 ---
         let displayList = [];
 
         function render() {
             const searchTerm = searchInput.value.trim().toLowerCase();
             const selectedSeries = seriesFilter.value || 'all';
-            const showOnlyOwned = ownedFilterCheckbox.checked; // 勾选了“已拥有”
+            const showOnlyOwned = ownedFilterCheckbox.checked;
 
             const filteredCards = cardsData.filter(card => {
                 const matchesSearch = card.name.toLowerCase().includes(searchTerm);
                 const matchesSeries = (selectedSeries === 'all') || (card.series === selectedSeries);
                 
-                // 判断该角色是否有标记为已拥有的图片
                 let hasOwnedImage = false;
                 if (selectedSeries === 'all') {
                     for (let c of cardsData) {
@@ -1276,10 +1847,10 @@
                     nameSpan.textContent = card.name;
 
                     if (selectedSeries === 'all') {
-                        if (M6_NAMES.includes(card.name)) {
+                        if (card.isCore) {
                             const badge = document.createElement('span');
                             badge.className = 'm6-badge';
-                            badge.textContent = 'M6 核心角色';
+                            badge.textContent = '常驻角色';
                             nameWrapper.appendChild(nameSpan);
                             nameWrapper.appendChild(badge);
                         } else {
@@ -1293,10 +1864,10 @@
                             }
                         }
                     } else {
-                        if (M6_NAMES.includes(card.name)) {
+                        if (card.isCore) {
                             const badge = document.createElement('span');
                             badge.className = 'm6-badge';
-                            badge.textContent = 'M6';
+                            badge.textContent = '常驻';
                             nameWrapper.appendChild(nameSpan);
                             nameWrapper.appendChild(badge);
                         } else {
@@ -1355,7 +1926,6 @@
                         builtinFlags = [...builtinImgs.map(() => true), ...userImgs.map(() => false)];
                     }
 
-                    // 【核心修改】如果勾选了“已拥有”，则过滤 allImgs，只保留标星的
                     let finalImgs = [];
                     let finalBuiltinFlags = [];
                     
@@ -1388,7 +1958,6 @@
                         };
                         thumb.appendChild(img);
                         
-                        // ☆ 图片级别的拥有标记
                         const starBtn = document.createElement('button');
                         starBtn.className = 'thumb-star' + (ownedImagesSet.has(imgData) ? ' owned' : '');
                         starBtn.innerHTML = ownedImagesSet.has(imgData) ? '⭐' : '☆';
@@ -1520,7 +2089,7 @@
             loadOwnedFromStorage();    
             loadAllImagesFromStorage(); 
             loadTrashFromStorage();
-            loadOwnedImagesFromStorage(); // 加载单张图片的拥有标记
+            loadOwnedImagesFromStorage();
             renderSeriesDropdown();
             
             loadingOverlay.style.display = 'none';
