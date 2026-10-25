@@ -382,10 +382,11 @@
         .categorize-overlay.active { display: flex; }
         .categorize-dialog {
             background: white; border-radius: 24px; padding: 1.5rem;
-            width: 100%; max-width: 500px; max-height: 85vh;
+            width: 100%; max-width: 540px; max-height: 88vh;
             display: flex; flex-direction: column; gap: 1rem;
             box-shadow: 0 20px 50px rgba(80, 30, 65, 0.3);
             border: 2px solid #f0cee4;
+            overflow-y: auto;
         }
         .categorize-dialog h3 { font-size: 1.2rem; color: #6b2d5c; margin-bottom: 0.5rem; }
         .categorize-dialog label { font-size: 0.9rem; font-weight: 600; color: #4e1f42; margin-bottom: 0.2rem; display: block; }
@@ -400,12 +401,13 @@
             display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0;
         }
         .categorize-large-preview {
-            width: 100%; max-height: 260px; border-radius: 12px; overflow: hidden;
-            background: #f9eef7; border: 1px solid #efd5e6; display: flex; align-items: center; justify-content: center;
-            margin-top: 0.5rem;
+            width: 100%; margin-top: 0.5rem; border-radius: 12px;
+            background: #f9eef7; border: 1px solid #efd5e6;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; min-height: 200px; max-height: 360px;
         }
         .categorize-large-preview img {
-            max-width: 100%; max-height: 260px; object-fit: contain; display: block;
+            width: 100%; height: auto; max-height: 360px; object-fit: contain; display: block;
         }
         .categorize-dialog textarea {
             width: 100%; padding: 0.8rem; font-size: 0.95rem;
@@ -414,7 +416,7 @@
         }
         .categorize-dialog textarea:focus { border-color: #c37bb0; background: #fdf8fc; }
         .role-checkbox-list {
-            max-height: 200px; overflow-y: auto; border: 2px solid #e2c3d6; border-radius: 12px;
+            max-height: 220px; overflow-y: auto; border: 2px solid #e2c3d6; border-radius: 12px;
             padding: 0.5rem; display: flex; flex-direction: column; gap: 0.3rem;
         }
         .role-checkbox-list label {
@@ -462,6 +464,8 @@
             .export-textarea { font-size: 0.8rem; }
             .float-menu { right: 1rem; bottom: 1rem; }
             .categorize-actions { flex-direction: column; align-items: stretch; }
+            .categorize-large-preview { max-height: 260px; }
+            .categorize-large-preview img { max-height: 260px; }
         }
     </style>
 </head>
@@ -1199,16 +1203,22 @@
             tabNew.classList.remove('active');
             existingSelectGroup.style.display = 'block';
             newRoleInputGroup.style.display = 'none';
+
             const currentSeries = seriesFilter.value;
+
             categorizeRoleList.innerHTML = '';
-            SERIES_LIST.forEach(series => {
+            // 如果停留在具体系列，只显示该系列的角色
+            const seriesToShow = (currentSeries && currentSeries !== 'all')
+                ? SERIES_LIST.filter(s => s.id === currentSeries)
+                : SERIES_LIST;
+
+            seriesToShow.forEach(series => {
                 if (series.id === 'all') return;
                 const roles = cardsData.filter(c => c.series === series.id);
                 if (roles.length === 0) return;
                 const header = document.createElement('div');
-                header.style.cssText = 'font-size:0.8rem; font-weight:bold; color:#a57a96; margin-top:0.5rem; margin-bottom:0.2rem; display: flex; justify-content: space-between; align-items: center;';
-                header.innerHTML = `<span>${series.name}</span>`;
-                if (series.id === currentSeries) header.style.color = '#b3529a';
+                header.style.cssText = 'font-size:0.8rem; font-weight:bold; color:#a57a96; margin-top:0.5rem; margin-bottom:0.2rem;';
+                header.textContent = series.name;
                 categorizeRoleList.appendChild(header);
                 roles.forEach(role => {
                     const label = document.createElement('label');
@@ -1217,6 +1227,7 @@
                     categorizeRoleList.appendChild(label);
                 });
             });
+
             categorizeSeriesSelect.innerHTML = '';
             SERIES_LIST.forEach(series => {
                 if (series.id === 'all') return;
@@ -1226,6 +1237,7 @@
                 categorizeSeriesSelect.appendChild(opt);
             });
             if (currentSeries && currentSeries !== 'all') categorizeSeriesSelect.value = currentSeries;
+
             categorizeOverlay.classList.add('active');
         });
 
@@ -1290,8 +1302,10 @@
                 });
                 wrapper.appendChild(delBtn);
                 categorizePreview.appendChild(wrapper);
+
                 categorizeLargePreview.style.display = 'flex';
                 categorizeLargeImg.src = currentLink;
+
                 if (linkQueue.length > 1) categorizeQueueInfo.textContent = `待分类: ${linkQueue.length - currentQueueIndex} / ${linkQueue.length}`;
                 else categorizeQueueInfo.textContent = `待分类: 1 / 1`;
             } else {
