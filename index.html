@@ -929,7 +929,7 @@
             "newdawn_Wonderbolts (闪电飞马队)": ["https://ponyhead.com/img/cards/nd110.jpg"],
             "newdawn_Landmark (地标建筑)": ["https://ponyhead.com/img/cards/nd113.jpg", "https://ponyhead.com/img/cards/nd107.jpg"],
             "newdawn_Others (其他)": ["https://ponyhead.com/img/cards/nd112.jpg", "https://ponyhead.com/img/cards/nd120.jpg", "https://ponyhead.com/img/cards/nd116.jpg", "https://ponyhead.com/img/cards/nd111.jpg", "https://ponyhead.com/img/cards/nd122.jpg", "https://ponyhead.com/img/cards/nd117.jpg", "https://ponyhead.com/img/cards/nd150.jpg", "https://ponyhead.com/img/cards/nd123.jpg"],
-            "newdawn_DJ Pon-3 (DJ)": ["https://ponyhead.com/img/cards/nd138.jpg"]
+            "newdawn_DJ Pon-3 (DJ)": ["https://ponyhead.com/img/cards/nd138.jpg"],
             "fond_Twilight Sparkle (紫悦)": ["https://ponyhead.com/img/cards/fm34.jpg", "https://ponyhead.com/img/cards/fm156.jpg", "https://ponyhead.com/img/cards/fm72.jpg", "https://ponyhead.com/img/cards/fm77.jpg", "https://ponyhead.com/img/cards/fm92.jpg", "https://ponyhead.com/img/cards/fm98.jpg", "https://ponyhead.com/img/cards/fm101.jpg", "https://ponyhead.com/img/cards/fm85.jpg", "https://ponyhead.com/img/cards/fm104.jpg", "https://ponyhead.com/img/cards/fm107.jpg", "https://ponyhead.com/img/cards/fm91.jpg", "https://ponyhead.com/img/cards/fm93.jpg", "https://ponyhead.com/img/cards/fm117.jpg", "https://ponyhead.com/img/cards/fm116.jpg", "https://ponyhead.com/img/cards/fm160.jpg", "https://ponyhead.com/img/cards/fm126.jpg", "https://ponyhead.com/img/cards/fm118.jpg", "https://ponyhead.com/img/cards/fm136.jpg", "https://ponyhead.com/img/cards/fm137.jpg", "https://ponyhead.com/img/cards/fm139.jpg"],
             "fond_Fluttershy (柔柔)": ["https://ponyhead.com/img/cards/fm49.jpg", "https://ponyhead.com/img/cards/fm151.jpg", "https://ponyhead.com/img/cards/fm59.jpg", "https://ponyhead.com/img/cards/fm66.jpg", "https://ponyhead.com/img/cards/fm71.jpg", "https://ponyhead.com/img/cards/fm81.jpg", "https://ponyhead.com/img/cards/fm98.jpg", "https://ponyhead.com/img/cards/fm102.jpg", "https://ponyhead.com/img/cards/fm93.jpg", "https://ponyhead.com/img/cards/fm116.jpg", "https://ponyhead.com/img/cards/fm126.jpg", "https://ponyhead.com/img/cards/fm142.jpg", "https://ponyhead.com/img/cards/fm138.jpg", "https://ponyhead.com/img/cards/fm137.jpg"],
             "fond_Pinkie Pie (碧琪)": ["https://ponyhead.com/img/cards/fm25.jpg", "https://ponyhead.com/img/cards/fm98.jpg", "https://ponyhead.com/img/cards/fm99.jpg", "https://ponyhead.com/img/cards/fm96.jpg", "https://ponyhead.com/img/cards/fm91.jpg", "https://ponyhead.com/img/cards/fm93.jpg", "https://ponyhead.com/img/cards/fm120.jpg", "https://ponyhead.com/img/cards/fm116.jpg", "https://ponyhead.com/img/cards/fm126.jpg", "https://ponyhead.com/img/cards/fm140.jpg", "https://ponyhead.com/img/cards/fm145.jpg", "https://ponyhead.com/img/cards/fm146.jpg", "https://ponyhead.com/img/cards/fm134.jpg", "https://ponyhead.com/img/cards/fm133.jpg", "https://ponyhead.com/img/cards/fm137.jpg"],
@@ -1135,8 +1135,866 @@
             });
         }
 
-        // 以下存储、渲染、事件等逻辑与上一版完全一致，此处省略重复代码。
-        // 实际使用时，请保留你上一版完整的后续 JavaScript 代码即可。
+        function saveAllImagesToStorage() {
+            const map = {};
+            cardsData.forEach(card => { if (card.images && card.images.length > 0) map[card.id] = card.images; });
+            try { localStorage.setItem(STORAGE_KEY_IMAGES, JSON.stringify(map)); } catch (e) { alert('存储空间不足，图片可能无法保存。'); }
+        }
+
+        function loadAllImagesFromStorage() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY_IMAGES);
+                if (stored) {
+                    const map = JSON.parse(stored);
+                    cardsData.forEach(card => { if (map[card.id] && Array.isArray(map[card.id])) card.images = map[card.id]; });
+                }
+            } catch (e) {}
+        }
+
+        function saveOwnedToStorage() {
+            const ownedMap = {};
+            cardsData.forEach(card => { if (card.owned) ownedMap[card.id] = true; });
+            try { localStorage.setItem(STORAGE_KEY_OWNED, JSON.stringify(ownedMap)); } catch (e) {}
+        }
+
+        function loadOwnedFromStorage() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY_OWNED);
+                if (stored) {
+                    const ownedMap = JSON.parse(stored);
+                    cardsData.forEach(card => { card.owned = !!ownedMap[card.id]; });
+                }
+            } catch (e) { cardsData.forEach(card => { card.owned = false; }); }
+        }
+
+        function loadOwnedImagesFromStorage() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY_OWNED_IMAGES);
+                if (stored) ownedImagesSet = new Set(JSON.parse(stored));
+            } catch (e) { ownedImagesSet = new Set(); }
+        }
+        function saveOwnedImagesToStorage() {
+            try { localStorage.setItem(STORAGE_KEY_OWNED_IMAGES, JSON.stringify([...ownedImagesSet])); } catch(e) {}
+        }
+
+        function saveTrashToStorage() {
+            try { localStorage.setItem(STORAGE_KEY_TRASH, JSON.stringify(trashData)); } catch(e) {}
+        }
+        function loadTrashFromStorage() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY_TRASH);
+                if (stored) trashData = JSON.parse(stored);
+                else trashData = [];
+            } catch(e) { trashData = []; }
+        }
+
+        const searchInput = document.getElementById('searchInput');
+        const seriesFilter = document.getElementById('seriesFilter');
+        const ownedFilterCheckbox = document.getElementById('ownedFilter');
+        const cardListEl = document.getElementById('cardList');
+        const statsDisplay = document.getElementById('statsDisplay');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const globalFileInput = document.getElementById('globalFileInput');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const openSidebarBtn = document.getElementById('openSidebarBtn');
+        const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+        const addSeriesBtn = document.getElementById('addSeriesBtn');
+        const openTrashBtn = document.getElementById('openTrashBtn');
+        const genCodeBtn = document.getElementById('genCodeBtn');
+        const importCodeBtn = document.getElementById('importCodeBtn');
+        const exportDataBtn = document.getElementById('exportDataBtn');
+        const importDataBtn = document.getElementById('importDataBtn');
+        const importFileInput = document.getElementById('importFileInput');
+        const exportOverlay = document.getElementById('exportOverlay');
+        const exportTitle = document.getElementById('exportTitle');
+        const exportTextArea = document.getElementById('exportTextArea');
+        const copyExportBtn = document.getElementById('copyExportBtn');
+        const closeExportBtn = document.getElementById('closeExportBtn');
+        const cancelExportBtn = document.getElementById('cancelExportBtn');
+        const trashOverlay = document.getElementById('trashOverlay');
+        const closeTrashBtn = document.getElementById('closeTrashBtn');
+        const trashList = document.getElementById('trashList');
+        const viewerOverlay = document.getElementById('viewerOverlay');
+        const viewerImage = document.getElementById('viewerImage');
+        const viewerCardName = document.getElementById('viewerCardName');
+        const viewerCounter = document.getElementById('viewerCounter');
+        const viewerPrev = document.getElementById('viewerPrev');
+        const viewerNext = document.getElementById('viewerNext');
+        const viewerClose = document.getElementById('viewerClose');
+        const linkDialogOverlay = document.getElementById('linkDialogOverlay');
+        const linkDialogTitle = document.getElementById('linkDialogTitle');
+        const linkDialogSub = document.getElementById('linkDialogSub');
+        const linkInput = document.getElementById('linkInput');
+        const batchInput = document.getElementById('batchInput');
+        const linkError = document.getElementById('linkError');
+        const linkCancelBtn = document.getElementById('linkCancelBtn');
+        const linkConfirmBtn = document.getElementById('linkConfirmBtn');
+        const categorizeBtn = document.getElementById('categorizeBtn');
+        const categorizeOverlay = document.getElementById('categorizeOverlay');
+        const categorizeCancelBtn = document.getElementById('categorizeCancelBtn');
+        const categorizeConfirmBtn = document.getElementById('categorizeConfirmBtn');
+        const categorizeLinkInput = document.getElementById('categorizeLinkInput');
+        const categorizePreview = document.getElementById('categorizePreview');
+        const categorizeLargePreview = document.getElementById('categorizeLargePreview');
+        const categorizeLargeImg = document.getElementById('categorizeLargeImg');
+        const tabExisting = document.getElementById('tabExisting');
+        const tabNew = document.getElementById('tabNew');
+        const existingSelectGroup = document.getElementById('existingSelectGroup');
+        const newRoleInputGroup = document.getElementById('newRoleInputGroup');
+        const categorizeRoleList = document.getElementById('categorizeRoleList');
+        const categorizeSeriesSelect = document.getElementById('categorizeSeriesSelect');
+        const categorizeNewRoleName = document.getElementById('categorizeNewRoleName');
+        const categorizeQueueInfo = document.getElementById('categorizeQueueInfo');
+
+        let currentMode = 'link'; 
+        let categorizeMode = 'existing';
+        let viewerState = { images: [], currentIndex: 0, cardName: '', isBuiltin: [] };
+        let currentUploadCardId = null; 
+        let isUploading = false;
+        let linkTargetCardId = null; 
+        let linkQueue = [];
+        let currentQueueIndex = 0;
+
+        function openSidebar() { sidebar.classList.add('active'); sidebarOverlay.classList.add('active'); }
+        function closeSidebar() { sidebar.classList.remove('active'); sidebarOverlay.classList.remove('active'); }
+        openSidebarBtn.addEventListener('click', openSidebar);
+        closeSidebarBtn.addEventListener('click', closeSidebar);
+        sidebarOverlay.addEventListener('click', closeSidebar);
+
+        function openTrash() { renderTrash(); trashOverlay.classList.add('active'); closeSidebar(); }
+        function closeTrash() { trashOverlay.classList.remove('active'); }
+        openTrashBtn.addEventListener('click', openTrash);
+        closeTrashBtn.addEventListener('click', closeTrash);
+        trashOverlay.addEventListener('click', (e) => { if (e.target === trashOverlay) closeTrash(); });
+
+        categorizeBtn.addEventListener('click', () => {
+            linkQueue = [];
+            currentQueueIndex = 0;
+            categorizeLinkInput.value = '';
+            categorizeNewRoleName.value = '';
+            categorizePreview.innerHTML = '';
+            categorizeLargePreview.style.display = 'none';
+            categorizeLargeImg.src = '';
+            categorizeQueueInfo.textContent = '';
+            categorizeMode = 'existing';
+            tabExisting.classList.add('active');
+            tabNew.classList.remove('active');
+            existingSelectGroup.style.display = 'block';
+            newRoleInputGroup.style.display = 'none';
+
+            const currentSeries = seriesFilter.value;
+
+            categorizeRoleList.innerHTML = '';
+            const seriesToShow = (currentSeries && currentSeries !== 'all')
+                ? SERIES_LIST.filter(s => s.id === currentSeries)
+                : SERIES_LIST;
+
+            seriesToShow.forEach(series => {
+                if (series.id === 'all') return;
+                const roles = cardsData.filter(c => c.series === series.id);
+                if (roles.length === 0) return;
+                const header = document.createElement('div');
+                header.style.cssText = 'font-size:0.8rem; font-weight:bold; color:#a57a96; margin-top:0.5rem; margin-bottom:0.2rem;';
+                header.textContent = series.name;
+                categorizeRoleList.appendChild(header);
+                roles.forEach(role => {
+                    const label = document.createElement('label');
+                    label.innerHTML = `<input type="checkbox" value="${role.id}" data-series="${series.id}"> <span>${role.name}</span>`;
+                    if (series.id === currentSeries) { label.style.background = '#fdf8fc'; label.style.border = '1px solid #f0cee4'; }
+                    categorizeRoleList.appendChild(label);
+                });
+            });
+
+            categorizeSeriesSelect.innerHTML = '';
+            SERIES_LIST.forEach(series => {
+                if (series.id === 'all') return;
+                const opt = document.createElement('option');
+                opt.value = series.id;
+                opt.textContent = series.name;
+                categorizeSeriesSelect.appendChild(opt);
+            });
+            if (currentSeries && currentSeries !== 'all') categorizeSeriesSelect.value = currentSeries;
+
+            categorizeOverlay.classList.add('active');
+        });
+
+        function closeCategorizeDialog() { categorizeOverlay.classList.remove('active'); }
+        categorizeCancelBtn.addEventListener('click', closeCategorizeDialog);
+        categorizeOverlay.addEventListener('click', (e) => { if (e.target === categorizeOverlay) closeCategorizeDialog(); });
+
+        tabExisting.addEventListener('click', () => {
+            categorizeMode = 'existing';
+            tabExisting.classList.add('active');
+            tabNew.classList.remove('active');
+            existingSelectGroup.style.display = 'block';
+            newRoleInputGroup.style.display = 'none';
+        });
+
+        tabNew.addEventListener('click', () => {
+            categorizeMode = 'new';
+            tabNew.classList.add('active');
+            tabExisting.classList.remove('active');
+            existingSelectGroup.style.display = 'none';
+            newRoleInputGroup.style.display = 'flex';
+        });
+
+        categorizeLinkInput.addEventListener('input', () => {
+            const text = categorizeLinkInput.value.trim();
+            const links = text.split('\n').map(l => l.trim()).filter(l => l && /^https?:\/\//i.test(l));
+            linkQueue = links;
+            currentQueueIndex = 0;
+            renderCategorizePreview();
+        });
+
+        function renderCategorizePreview() {
+            categorizePreview.innerHTML = '';
+            if (linkQueue.length === 0) {
+                categorizeQueueInfo.textContent = '';
+                categorizeLargePreview.style.display = 'none';
+                categorizeLargeImg.src = '';
+                return;
+            }
+            const currentLink = linkQueue[currentQueueIndex];
+            if (currentLink) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'preview-item';
+                const img = document.createElement('img');
+                img.src = currentLink;
+                wrapper.appendChild(img);
+                const delBtn = document.createElement('button');
+                delBtn.className = 'preview-delete-btn';
+                delBtn.innerHTML = '✕';
+                delBtn.title = '删除此链接';
+                delBtn.addEventListener('click', () => {
+                    let deletedFromCard = false;
+                    cardsData.forEach(c => {
+                        const idx = c.images.indexOf(currentLink);
+                        if (idx > -1) { c.images.splice(idx, 1); deletedFromCard = true; }
+                    });
+                    if (deletedFromCard) { saveAllImagesToStorage(); render(); }
+                    linkQueue.splice(currentQueueIndex, 1);
+                    if (linkQueue.length === 0) categorizeLinkInput.value = '';
+                    else categorizeLinkInput.value = linkQueue.join('\n');
+                    renderCategorizePreview();
+                });
+                wrapper.appendChild(delBtn);
+                categorizePreview.appendChild(wrapper);
+
+                categorizeLargePreview.style.display = 'flex';
+                categorizeLargeImg.src = currentLink;
+
+                if (linkQueue.length > 1) categorizeQueueInfo.textContent = `待分类: ${linkQueue.length - currentQueueIndex} / ${linkQueue.length}`;
+                else categorizeQueueInfo.textContent = `待分类: 1 / 1`;
+            } else {
+                categorizePreview.innerHTML = '<span style="font-size:0.8rem;color:#1b5e3e;">✅ 所有图片已分类完成！</span>';
+                categorizeQueueInfo.textContent = '';
+                categorizeLinkInput.value = '';
+                categorizeLargePreview.style.display = 'none';
+                categorizeLargeImg.src = '';
+            }
+        }
+
+        categorizeConfirmBtn.addEventListener('click', () => {
+            if (linkQueue.length === 0 || currentQueueIndex >= linkQueue.length) { alert('没有待分类的链接'); return; }
+            const currentLink = linkQueue[currentQueueIndex];
+            if (categorizeMode === 'existing') {
+                const checkedBoxes = categorizeRoleList.querySelectorAll('input[type="checkbox"]:checked');
+                if (checkedBoxes.length === 0) { alert('请至少勾选一个目标角色'); return; }
+                checkedBoxes.forEach(cb => {
+                    const card = cardsData.find(c => c.id === cb.value);
+                    if (card && !card.images.includes(currentLink)) card.images.push(currentLink);
+                });
+                saveAllImagesToStorage();
+            } else {
+                const seriesId = categorizeSeriesSelect.value;
+                const newRoleName = categorizeNewRoleName.value.trim();
+                if (!newRoleName) { alert('请输入新角色名称'); return; }
+                let existingCard = cardsData.find(c => c.series === seriesId && c.name === newRoleName);
+                if (!existingCard) {
+                    existingCard = { id: `${seriesId}_${newRoleName}`, name: newRoleName, series: seriesId, isGroup: false, isCore: false, images: [], owned: false };
+                    cardsData.push(existingCard);
+                }
+                if (!existingCard.images.includes(currentLink)) existingCard.images.push(currentLink);
+                saveAllImagesToStorage();
+            }
+            currentQueueIndex++;
+            if (currentQueueIndex < linkQueue.length) {
+                renderCategorizePreview();
+                categorizeConfirmBtn.textContent = '继续分类下一张';
+                categorizeConfirmBtn.style.background = '#f57f17';
+            } else {
+                renderCategorizePreview();
+                categorizeConfirmBtn.textContent = '确认分类';
+                categorizeConfirmBtn.style.background = '#b3529a';
+                render();
+                setTimeout(() => { alert('✅ 所有图片分类完成！'); closeCategorizeDialog(); }, 100);
+            }
+        });
+
+        function renderTrash() {
+            trashList.innerHTML = '';
+            if (trashData.length === 0) {
+                trashList.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 2rem; color:#a57a96;">回收站是空的</div>';
+                return;
+            }
+            trashData.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'trash-item';
+                div.innerHTML = `<img src="${item.url}" alt="已删除图片"><div class="trash-actions"><button class="btn-restore" data-index="${index}">还原</button><button class="btn-hard-delete" data-index="${index}">永久删除</button></div>`;
+                trashList.appendChild(div);
+            });
+            document.querySelectorAll('.btn-restore').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = parseInt(e.target.dataset.index);
+                    const item = trashData[idx];
+                    const card = cardsData.find(c => c.id === item.cardId);
+                    if (card) { card.images.push(item.url); saveAllImagesToStorage(); }
+                    trashData.splice(idx, 1);
+                    saveTrashToStorage();
+                    renderTrash();
+                    render();
+                });
+            });
+            document.querySelectorAll('.btn-hard-delete').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    if (!confirm('彻底删除后无法恢复，确定吗？')) return;
+                    const idx = parseInt(e.target.dataset.index);
+                    trashData.splice(idx, 1);
+                    saveTrashToStorage();
+                    renderTrash();
+                });
+            });
+        }
+
+        function renderSeriesDropdown() {
+            const currentVal = seriesFilter.value || 'all';
+            seriesFilter.innerHTML = '';
+            SERIES_LIST.forEach(series => {
+                const option = document.createElement('option');
+                option.value = series.id;
+                option.textContent = series.name;
+                seriesFilter.appendChild(option);
+            });
+            seriesFilter.value = currentVal;
+        }
+
+        function openGenericDialog(mode, title, sub, placeholder, cardId = null) {
+            currentMode = mode;
+            linkTargetCardId = cardId;
+            linkDialogTitle.textContent = title;
+            linkDialogSub.textContent = sub;
+            linkError.classList.remove('active');
+            linkConfirmBtn.textContent = '确认';
+            linkConfirmBtn.disabled = false;
+            if (mode === 'newSeries' || mode === 'link' || mode === 'importCode') {
+                linkInput.style.display = 'block';
+                batchInput.style.display = 'none';
+                linkInput.placeholder = placeholder;
+                linkInput.value = '';
+                setTimeout(() => linkInput.focus(), 100);
+            } else if (mode === 'batch') {
+                linkInput.style.display = 'none';
+                batchInput.style.display = 'block';
+                batchInput.placeholder = placeholder;
+                batchInput.value = '';
+                setTimeout(() => batchInput.focus(), 100);
+            }
+            linkDialogOverlay.classList.add('active');
+        }
+
+        function closeLinkDialog() {
+            linkDialogOverlay.classList.remove('active');
+            linkInput.value = '';
+            batchInput.value = '';
+            linkError.classList.remove('active');
+            linkTargetCardId = null;
+        }
+
+        function confirmDialogAction() {
+            const val = linkInput.value.trim();
+            const batchVal = batchInput.value.trim();
+            if (currentMode === 'link') {
+                if (!val) { linkError.textContent = '不能为空'; linkError.classList.add('active'); return; }
+                if (!/^https?:\/\//i.test(val)) { linkError.textContent = '链接必须以 http:// 或 https:// 开头'; linkError.classList.add('active'); return; }
+                linkConfirmBtn.textContent = '保存中...';
+                linkConfirmBtn.disabled = true;
+                const card = cardsData.find(c => c.id === linkTargetCardId);
+                if (card) { card.images.push(val); saveAllImagesToStorage(); }
+                closeLinkDialog();
+                render();
+            } else if (currentMode === 'batch') {
+                if (!batchVal) { linkError.textContent = '不能为空'; linkError.classList.add('active'); return; }
+                const links = batchVal.split('\n').map(l => l.trim()).filter(l => l);
+                const validLinks = links.filter(l => /^https?:\/\//i.test(l));
+                if (validLinks.length === 0) { linkError.textContent = '没有找到有效的 HTTP/HTTPS 链接'; linkError.classList.add('active'); return; }
+                linkConfirmBtn.textContent = '保存中...';
+                linkConfirmBtn.disabled = true;
+                const card = cardsData.find(c => c.id === linkTargetCardId);
+                if (card) { validLinks.forEach(url => { if (!card.images.includes(url)) card.images.push(url); }); saveAllImagesToStorage(); }
+                closeLinkDialog();
+                render();
+            } else if (currentMode === 'newSeries') {
+                if (!val) { linkError.textContent = '不能为空'; linkError.classList.add('active'); return; }
+                const newId = 'custom_' + Date.now();
+                const newSeries = { id: newId, name: val };
+                let customSeries = [];
+                try { const stored = localStorage.getItem(STORAGE_KEY_CUSTOM_SERIES); if (stored) customSeries = JSON.parse(stored); } catch(e) {}
+                customSeries.push(newSeries);
+                localStorage.setItem(STORAGE_KEY_CUSTOM_SERIES, JSON.stringify(customSeries));
+                loadSeriesList();
+                initCardsData();
+                loadOwnedFromStorage();
+                loadAllImagesFromStorage();
+                renderSeriesDropdown();
+                seriesFilter.value = newId;
+                closeLinkDialog();
+                render();
+                closeSidebar();
+            } else if (currentMode === 'importCode') {
+                if (!val) { linkError.textContent = '识别码不能为空'; linkError.classList.add('active'); return; }
+                try {
+                    const decoded = atob(val);
+                    const parsed = JSON.parse(decoded);
+                    if (!Array.isArray(parsed)) throw new Error('格式不正确');
+                    ownedImagesSet = new Set(parsed);
+                    saveOwnedImagesToStorage();
+                    closeLinkDialog();
+                    render();
+                    alert('✅ 识别码导入成功！你的 ⭐ 标记已恢复。');
+                } catch (err) {
+                    linkError.textContent = '识别码无效，请检查后重试。';
+                    linkError.classList.add('active');
+                }
+            }
+        }
+
+        linkCancelBtn.addEventListener('click', closeLinkDialog);
+        linkConfirmBtn.addEventListener('click', confirmDialogAction);
+        linkInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); confirmDialogAction(); } if (e.key === 'Escape') closeLinkDialog(); });
+        linkDialogOverlay.addEventListener('click', (e) => { if (e.target === linkDialogOverlay) closeLinkDialog(); });
+
+        addSeriesBtn.addEventListener('click', () => { openGenericDialog('newSeries', '增加新系列', '输入系列名称（例如：My Little Pony 新系列）', '系列名称...'); });
+
+        genCodeBtn.addEventListener('click', () => {
+            if (ownedImagesSet.size === 0) { alert('你还没有标记任何图片为“已拥有”哦！'); return; }
+            const str = JSON.stringify([...ownedImagesSet]);
+            const code = btoa(str);
+            exportTitle.textContent = '🔑 你的专属图鉴识别码';
+            exportTextArea.value = code;
+            exportOverlay.classList.add('active');
+            closeSidebar();
+        });
+
+        importCodeBtn.addEventListener('click', () => { openGenericDialog('importCode', '输入图鉴识别码', '粘贴你之前生成的专属识别码以恢复标记', '在此粘贴识别码...'); });
+
+        exportDataBtn.addEventListener('click', () => {
+            try {
+                let outputText = "";
+                const allSeries = SERIES_LIST.filter(s => s.id !== 'all');
+                allSeries.forEach(series => {
+                    const seriesCards = cardsData.filter(c => c.series === series.id);
+                    let seriesHasImages = false;
+                    let seriesText = `【${series.name}】\n`;
+                    seriesCards.forEach(card => {
+                        let cardLinks = [];
+                        if (card.images && card.images.length > 0) {
+                            card.images.forEach(url => { if (url.startsWith('http://') || url.startsWith('https://')) cardLinks.push(url); });
+                        }
+                        cardLinks = [...new Set(cardLinks)];
+                        if (cardLinks.length > 0) {
+                            seriesHasImages = true;
+                            seriesText += `  ▪️ ${card.name}\n`;
+                            cardLinks.forEach(url => {
+                                const isOwned = ownedImagesSet.has(url) ? ' [⭐ 已拥有]' : '';
+                                seriesText += `     ${url}${isOwned}\n`;
+                            });
+                            seriesText += "\n";
+                        }
+                    });
+                    if (seriesHasImages) outputText += seriesText + "-------------------\n\n";
+                });
+                if (!outputText) { alert('当前页面中还没有添加任何网络图片链接哦！'); return; }
+                exportTitle.textContent = '🔗 分类图片链接提取';
+                exportTextArea.value = outputText.trim();
+                exportOverlay.classList.add('active');
+                closeSidebar();
+            } catch (e) { alert('提取失败：' + e.message); }
+        });
+
+        function closeExportDialog() { exportOverlay.classList.remove('active'); }
+        closeExportBtn.addEventListener('click', closeExportDialog);
+        cancelExportBtn.addEventListener('click', closeExportDialog);
+        exportOverlay.addEventListener('click', (e) => { if (e.target === exportOverlay) closeExportDialog(); });
+
+        copyExportBtn.addEventListener('click', () => {
+            const text = exportTextArea.value;
+            if (!text) return;
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => { showCopySuccess(); }).catch(() => { fallbackCopy(); });
+            } else { fallbackCopy(); }
+            function fallbackCopy() {
+                exportTextArea.select();
+                exportTextArea.setSelectionRange(0, 99999);
+                try { document.execCommand('copy'); showCopySuccess(); } catch (err) { alert('复制失败，请手动全选复制！'); }
+            }
+            function showCopySuccess() {
+                const originalText = copyExportBtn.innerHTML;
+                copyExportBtn.classList.add('copied');
+                copyExportBtn.innerHTML = '✅ 复制成功';
+                setTimeout(() => { copyExportBtn.classList.remove('copied'); copyExportBtn.innerHTML = originalText; }, 2000);
+            }
+        });
+
+        importDataBtn.addEventListener('click', () => { importFileInput.click(); });
+
+        importFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    if (!confirm('导入将覆盖当前所有数据（包括图片、状态、自建系列等），确定要继续吗？')) { importFileInput.value = ''; return; }
+                    if (data.images) localStorage.setItem(STORAGE_KEY_IMAGES, JSON.stringify(data.images)); else localStorage.removeItem(STORAGE_KEY_IMAGES);
+                    if (data.owned) localStorage.setItem(STORAGE_KEY_OWNED, JSON.stringify(data.owned)); else localStorage.removeItem(STORAGE_KEY_OWNED);
+                    if (data.ownedImages) localStorage.setItem(STORAGE_KEY_OWNED_IMAGES, JSON.stringify(data.ownedImages));
+                    if (data.customSeries) localStorage.setItem(STORAGE_KEY_CUSTOM_SERIES, JSON.stringify(data.customSeries)); else localStorage.removeItem(STORAGE_KEY_CUSTOM_SERIES);
+                    if (data.trash) localStorage.setItem(STORAGE_KEY_TRASH, JSON.stringify(data.trash)); else localStorage.removeItem(STORAGE_KEY_TRASH);
+                    alert('🎉 导入成功！页面即将刷新。');
+                    location.reload();
+                } catch (err) { alert('导入失败，文件格式不正确！\n' + err.message); } finally { importFileInput.value = ''; }
+            };
+            reader.readAsText(file);
+        });
+
+        globalFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file || !currentUploadCardId) { globalFileInput.value = ''; return; }
+            const cardId = currentUploadCardId;
+            if (!file.type.startsWith('image/')) { alert('请选择图片文件'); return; }
+            if (file.size > 2 * 1024 * 1024) { alert('图片不能超过 2MB，请压缩后再上传'); return; }
+            isUploading = true;
+            render();
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const imageData = ev.target.result;
+                const card = cardsData.find(c => c.id === cardId);
+                if (card) { card.images.push(imageData); saveAllImagesToStorage(); }
+                isUploading = false;
+                currentUploadCardId = null;
+                globalFileInput.value = '';
+                render();
+            };
+            reader.onerror = () => { alert('读取图片失败'); isUploading = false; currentUploadCardId = null; globalFileInput.value = ''; render(); };
+            reader.readAsDataURL(file);
+        });
+
+        let displayList = [];
+
+        function render() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            const selectedSeries = seriesFilter.value || 'all';
+            const showOnlyOwned = ownedFilterCheckbox.checked;
+
+            const filteredCards = cardsData.filter(card => {
+                const matchesSearch = card.name.toLowerCase().includes(searchTerm);
+                const matchesSeries = (selectedSeries === 'all') || (card.series === selectedSeries);
+                let hasOwnedImage = false;
+                if (selectedSeries === 'all') {
+                    for (let c of cardsData) {
+                        if (c.name === card.name) {
+                            const bImgs = BUILTIN_IMAGES[c.id] || [];
+                            const uImgs = c.images || [];
+                            if ([...bImgs, ...uImgs].some(img => ownedImagesSet.has(img))) { hasOwnedImage = true; break; }
+                        }
+                    }
+                } else {
+                    const bImgs = BUILTIN_IMAGES[card.id] || [];
+                    const uImgs = card.images || [];
+                    hasOwnedImage = [...bImgs, ...uImgs].some(img => ownedImagesSet.has(img));
+                }
+                const matchesOwned = showOnlyOwned ? hasOwnedImage === true : true;
+                return matchesSearch && matchesSeries && matchesOwned;
+            });
+
+            cardListEl.innerHTML = '';
+
+            if (filteredCards.length === 0) {
+                displayList = [];
+                const emptyDiv = document.createElement('div');
+                emptyDiv.className = 'empty-message';
+                emptyDiv.textContent = '✨ 没有找到符合条件的卡片...';
+                cardListEl.appendChild(emptyDiv);
+            } else {
+                if (selectedSeries === 'all') {
+                    const seen = new Set();
+                    displayList = [];
+                    filteredCards.forEach(c => { if (!seen.has(c.name)) { seen.add(c.name); displayList.push(c); } });
+                } else {
+                    displayList = filteredCards;
+                }
+
+                displayList.forEach(card => {
+                    const li = document.createElement('li');
+                    let displayOwned = card.owned;
+                    if (selectedSeries === 'all') displayOwned = cardsData.some(c => c.name === card.name && c.owned);
+                    li.className = `card-item ${displayOwned ? 'owned' : ''}`;
+
+                    const header = document.createElement('div');
+                    header.className = 'card-header';
+                    const nameWrapper = document.createElement('div');
+                    nameWrapper.style.display = 'flex';
+                    nameWrapper.style.alignItems = 'center';
+                    nameWrapper.style.flexWrap = 'wrap';
+                    nameWrapper.style.gap = '0.5rem';
+                    nameWrapper.style.flex = '1';
+
+                    const nameSpan = document.createElement('span');
+                    nameSpan.className = 'card-name';
+                    nameSpan.textContent = card.name;
+
+                    if (selectedSeries === 'all') {
+                        if (card.isCore) {
+                            const badge = document.createElement('span');
+                            badge.className = 'm6-badge';
+                            badge.textContent = '常驻角色';
+                            nameWrapper.appendChild(nameSpan);
+                            nameWrapper.appendChild(badge);
+                        } else {
+                            const seriesObj = SERIES_LIST.find(s => s.id === card.series);
+                            if (seriesObj) {
+                                const badge = document.createElement('span');
+                                badge.className = 'card-series-badge';
+                                badge.textContent = seriesObj.name.split(' - ')[0];
+                                nameWrapper.appendChild(nameSpan);
+                                nameWrapper.appendChild(badge);
+                            }
+                        }
+                    } else {
+                        if (card.isCore) {
+                            const badge = document.createElement('span');
+                            badge.className = 'm6-badge';
+                            badge.textContent = '常驻';
+                            nameWrapper.appendChild(nameSpan);
+                            nameWrapper.appendChild(badge);
+                        } else {
+                            nameWrapper.appendChild(nameSpan);
+                        }
+                    }
+
+                    const ownedLabel = document.createElement('label');
+                    ownedLabel.className = 'owned-mark';
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = displayOwned;
+                    checkbox.addEventListener('change', (e) => {
+                        const isChecked = e.target.checked;
+                        if (selectedSeries === 'all') cardsData.forEach(c => { if (c.name === card.name) c.owned = isChecked; });
+                        else card.owned = isChecked;
+                        saveOwnedToStorage();
+                        render();
+                    });
+                    const ownedText = document.createElement('span');
+                    ownedText.textContent = '已拥有角色';
+                    ownedLabel.appendChild(checkbox);
+                    ownedLabel.appendChild(ownedText);
+                    header.appendChild(nameWrapper);
+                    header.appendChild(ownedLabel);
+
+                    let allImgs = [];
+                    let builtinFlags = [];
+                    if (selectedSeries === 'all') {
+                        cardsData.forEach(c => {
+                            if (c.name === card.name) {
+                                const bImgs = BUILTIN_IMAGES[c.id] || [];
+                                const uImgs = c.images || [];
+                                bImgs.forEach(img => { if (!allImgs.includes(img)) { allImgs.push(img); builtinFlags.push(true); } });
+                                uImgs.forEach(img => { if (!allImgs.includes(img)) { allImgs.push(img); builtinFlags.push(false); } });
+                            }
+                        });
+                    } else {
+                        const builtinImgs = BUILTIN_IMAGES[card.id] || [];
+                        const userImgs = card.images || [];
+                        allImgs = [...builtinImgs, ...userImgs];
+                        builtinFlags = [...builtinImgs.map(() => true), ...userImgs.map(() => false)];
+                    }
+
+                    let finalImgs = [];
+                    let finalBuiltinFlags = [];
+                    allImgs.forEach((imgData, idx) => {
+                        if (showOnlyOwned) { if (ownedImagesSet.has(imgData)) { finalImgs.push(imgData); finalBuiltinFlags.push(builtinFlags[idx]); } }
+                        else { finalImgs.push(imgData); finalBuiltinFlags.push(builtinFlags[idx]); }
+                    });
+
+                    const imageArea = document.createElement('div');
+                    imageArea.className = 'image-area';
+
+                    finalImgs.forEach((imgData, idx) => {
+                        const isBuiltin = finalBuiltinFlags[idx];
+                        const thumb = document.createElement('div');
+                        thumb.className = 'thumb';
+                        const img = document.createElement('img');
+                        img.src = imgData;
+                        img.alt = `${card.name} 图片 ${idx + 1}`;
+                        img.onerror = () => { thumb.style.background = '#f0e4ec'; thumb.innerHTML = '<span style="font-size:0.6rem;color:#a57a96;text-align:center;padding:2px;">加载失败</span>'; };
+                        thumb.appendChild(img);
+
+                        const starBtn = document.createElement('button');
+                        starBtn.className = 'thumb-star' + (ownedImagesSet.has(imgData) ? ' owned' : '');
+                        starBtn.innerHTML = ownedImagesSet.has(imgData) ? '⭐' : '☆';
+                        starBtn.title = '标记/取消标记此图片为已拥有';
+                        starBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            if (ownedImagesSet.has(imgData)) ownedImagesSet.delete(imgData);
+                            else ownedImagesSet.add(imgData);
+                            saveOwnedImagesToStorage();
+                            render();
+                        });
+                        thumb.appendChild(starBtn);
+
+                        if (isBuiltin) {
+                            const badge = document.createElement('span');
+                            badge.className = 'builtin-badge';
+                            badge.textContent = '内置';
+                            thumb.appendChild(badge);
+                        } else {
+                            const isLink = /^https?:\/\//i.test(imgData);
+                            if (isLink) {
+                                const badge = document.createElement('span');
+                                badge.className = 'link-badge';
+                                badge.textContent = '链接';
+                                thumb.appendChild(badge);
+                            }
+                            const delBtn = document.createElement('button');
+                            delBtn.className = 'thumb-delete';
+                            delBtn.textContent = '✕';
+                            delBtn.title = '删除并移入回收站';
+                            delBtn.type = 'button';
+                            delBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                if (selectedSeries === 'all') {
+                                    for (let c of cardsData) {
+                                        if (c.name === card.name) {
+                                            const idxInC = c.images.indexOf(imgData);
+                                            if (idxInC > -1) { c.images.splice(idxInC, 1); trashData.push({ cardId: c.id, url: imgData }); break; }
+                                        }
+                                    }
+                                } else {
+                                    const userIdx = card.images.indexOf(imgData);
+                                    if (userIdx > -1) { card.images.splice(userIdx, 1); trashData.push({ cardId: card.id, url: imgData }); }
+                                }
+                                saveAllImagesToStorage();
+                                saveTrashToStorage();
+                                render();
+                            });
+                            thumb.appendChild(delBtn);
+                        }
+
+                        thumb.addEventListener('click', (e) => {
+                            if (e.target.classList.contains('thumb-delete')) return;
+                            if (e.target.classList.contains('thumb-star')) return;
+                            openViewer(card.name, finalImgs, idx, finalBuiltinFlags);
+                        });
+                        imageArea.appendChild(thumb);
+                    });
+
+                    const uploadThumb = document.createElement('div');
+                    uploadThumb.className = 'upload-thumb';
+                    uploadThumb.title = '从本地上传图片';
+                    uploadThumb.innerHTML = `<span class="plus">+</span><span>上传</span>`;
+                    if (isUploading && currentUploadCardId === card.id) {
+                        uploadThumb.classList.add('uploading');
+                        uploadThumb.innerHTML = `<span class="plus">↻</span><span>保存中</span>`;
+                    }
+                    uploadThumb.addEventListener('click', () => { if (isUploading) return; currentUploadCardId = card.id; globalFileInput.value = ''; globalFileInput.click(); });
+                    imageArea.appendChild(uploadThumb);
+
+                    const linkThumb = document.createElement('div');
+                    linkThumb.className = 'link-thumb';
+                    linkThumb.title = '通过单条链接添加';
+                    linkThumb.innerHTML = `<span class="link-icon">🔗</span><span>链接</span>`;
+                    linkThumb.addEventListener('click', () => { openGenericDialog('link', `为「${card.name}」添加图片链接`, '输入图片的 URL 地址（以 http:// 或 https:// 开头）', 'https://...', card.id); });
+                    imageArea.appendChild(linkThumb);
+
+                    const batchThumb = document.createElement('div');
+                    batchThumb.className = 'batch-thumb';
+                    batchThumb.title = '批量导入图片链接';
+                    batchThumb.innerHTML = `<span class="batch-icon">📚</span><span>批量</span>`;
+                    batchThumb.addEventListener('click', () => { openGenericDialog('batch', `为「${card.name}」批量导入链接`, '每行粘贴一个链接，批量添加', '第一行链接\n第二行链接...', card.id); });
+                    imageArea.appendChild(batchThumb);
+
+                    li.appendChild(header);
+                    li.appendChild(imageArea);
+                    cardListEl.appendChild(li);
+                });
+            }
+
+            const totalCards = displayList.length;
+            let ownedCards = 0;
+            if (selectedSeries === 'all') ownedCards = displayList.filter(c => cardsData.some(dc => dc.name === c.name && dc.owned)).length;
+            else ownedCards = displayList.filter(c => c.owned).length;
+            statsDisplay.textContent = `筛选出 ${totalCards} 张 · 角色已拥有 ${ownedCards} 张`;
+        }
+
+        function init() {
+            loadSeriesList();
+            initCardsData();
+            loadOwnedFromStorage();
+            loadAllImagesFromStorage();
+            loadTrashFromStorage();
+            loadOwnedImagesFromStorage();
+            renderSeriesDropdown();
+            loadingOverlay.style.display = 'none';
+            render();
+        }
+
+        init();
+
+        searchInput.addEventListener('input', render);
+        seriesFilter.addEventListener('change', render);
+        ownedFilterCheckbox.addEventListener('change', render);
+
+        function openViewer(cardName, images, startIndex = 0, builtinFlags = []) {
+            if (!images || images.length === 0) return;
+            viewerState = { images: [...images], currentIndex: Math.min(startIndex, images.length - 1), cardName: cardName, isBuiltin: [...builtinFlags] };
+            updateViewer();
+            viewerOverlay.classList.add('active');
+        }
+        function updateViewer() {
+            const { images, currentIndex, cardName, isBuiltin } = viewerState;
+            if (images.length === 0) { viewerOverlay.classList.remove('active'); return; }
+            viewerImage.src = images[currentIndex];
+            const tag = isBuiltin && isBuiltin[currentIndex] ? ' [内置]' : '';
+            viewerCardName.textContent = cardName + tag;
+            viewerCounter.textContent = `${currentIndex + 1} / ${images.length}`;
+            viewerPrev.style.display = images.length > 1 ? 'flex' : 'none';
+            viewerNext.style.display = images.length > 1 ? 'flex' : 'none';
+        }
+        function closeViewer() { viewerOverlay.classList.remove('active'); viewerImage.src = ''; }
+        function viewerGoPrev() {
+            const { images, currentIndex } = viewerState;
+            if (images.length <= 1) return;
+            viewerState.currentIndex = (currentIndex - 1 + images.length) % images.length;
+            updateViewer();
+        }
+        function viewerGoNext() {
+            const { images, currentIndex } = viewerState;
+            if (images.length <= 1) return;
+            viewerState.currentIndex = (currentIndex + 1) % images.length;
+            updateViewer();
+        }
+
+        viewerPrev.addEventListener('click', (e) => { e.stopPropagation(); viewerGoPrev(); });
+        viewerNext.addEventListener('click', (e) => { e.stopPropagation(); viewerGoNext(); });
+        viewerClose.addEventListener('click', closeViewer);
+        viewerOverlay.addEventListener('click', (e) => { if (e.target === viewerOverlay) closeViewer(); });
+        document.addEventListener('keydown', (e) => {
+            if (!viewerOverlay.classList.contains('active')) return;
+            if (e.key === 'Escape') closeViewer();
+            if (e.key === 'ArrowLeft') viewerGoPrev();
+            if (e.key === 'ArrowRight') viewerGoNext();
+        });
     </script>
 </body>
 </html>
